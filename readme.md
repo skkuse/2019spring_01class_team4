@@ -6,10 +6,10 @@
 > 
 
 ## Requirement Specification
-[문서](https://github.com/skkuse/2019spring_01class_team4/docs)
+[문서](https://github.com/skkuse/2019spring_01class_team4/blob/master/docs/Qurious_Requirement_Specification2.pdf)
 
 ## Design Specification
-[문서](https://github.com/skkuse/2019spring_01class_team4/docs)
+[문서](https://github.com/skkuse/2019spring_01class_team4/blob/master/docs/)
 
 
 ## 개발 일정
