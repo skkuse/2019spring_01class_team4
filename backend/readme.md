@@ -1,7 +1,7 @@
 # Qurious Backend
 
 ## Prerequisite
---------
+
 1. python 3.6 이상
 2. Docker (Stable Version)
 

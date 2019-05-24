@@ -217,6 +217,8 @@ class UserRegisterAPI(APIView):
 
         data = request.data
         data["username"] = data["username"].lower()
+        data["bj_username"] = data["bj_username"].strip()
+        data["hr_username"] = data["hr_username"].strip()
         data["email"] = data["email"].lower()
         captcha = Captcha(request)
         if not captcha.check(data["captcha"]):
@@ -225,10 +227,11 @@ class UserRegisterAPI(APIView):
             return self.error("Username already exists")
         if User.objects.filter(email=data["email"]).exists():
             return self.error("Email already exists")
+        
         user = User.objects.create(username=data["username"], email=data["email"])
         user.set_password(data["password"])
         user.save()
-        UserProfile.objects.create(user=user)
+        UserProfile.objects.create(user=user, bj_username=data["bj_username"],hr_username=data["hr_username"])
         return self.success("Succeeded")
 
 
