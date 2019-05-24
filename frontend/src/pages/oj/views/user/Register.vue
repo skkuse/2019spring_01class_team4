@@ -22,12 +22,12 @@
         </Input>
       </FormItem>
       <FormItem prop="bjusername">
-        <Input type="text" v-model="formRegister.bjusername" :placeholder="'Baekjoon 아이디'" size="large" @on-enter="handleRegister">
+        <Input type="text" v-model="formRegister.bj_username" :placeholder="'Baekjoon 아이디'" size="large" @on-enter="handleRegister">
         <Icon type="ios-people-outline" slot="prepend"></Icon>
         </Input>
       </FormItem>
       <FormItem prop="hrusername">
-        <Input type="text" v-model="formRegister.hrusername" :placeholder="'Hackerrank 아이디'" size="large" @on-enter="handleRegister">
+        <Input type="text" v-model="formRegister.hr_username" :placeholder="'Hackerrank 아이디'" size="large" @on-enter="handleRegister">
         <Icon type="ios-people-outline" slot="prepend"></Icon>
         </Input>
       </FormItem>
@@ -84,6 +84,7 @@
           }
         }, _ => callback())
       }
+
       const CheckEmailNotExist = (rule, value, callback) => {
         api.checkUsernameOrEmail(undefined, value).then(res => {
           if (res.data.data.email === true) {
@@ -95,7 +96,6 @@
       }
       const CheckPassword = (rule, value, callback) => {
         if (this.formRegister.password !== '') {
-          // 对第二个密码框再次验证
           this.$refs.formRegister.validateField('passwordAgain')
         }
         callback()
@@ -115,7 +115,9 @@
           password: '',
           passwordAgain: '',
           email: '',
-          captcha: ''
+          captcha: '',
+          bj_username: '',
+          hr_username: ''
         },
         ruleRegister: {
           username: [
