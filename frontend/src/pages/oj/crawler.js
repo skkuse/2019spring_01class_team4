@@ -6,6 +6,7 @@ Vue.prototype.$http = axios
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 axios.defaults.xsrfCookieName = 'csrftoken'
 
+
 export default {
   testCrawlerApi (username) {
     return ajax('https://www.acmicpc.net/user/' + username, 'get')

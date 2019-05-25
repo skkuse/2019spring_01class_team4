@@ -28,6 +28,8 @@ from ..serializers import (TwoFactorAuthCodeSerializer, UserProfileSerializer,
 from ..tasks import send_email_async
 
 
+import requests
+
 class UserProfileAPI(APIView):
     @method_decorator(ensure_csrf_cookie)
     def get(self, request, **kwargs):
@@ -223,6 +225,12 @@ class UserRegisterAPI(APIView):
         captcha = Captcha(request)
         if not captcha.check(data["captcha"]):
             return self.error("Invalid captcha")
+
+        # 백준 체크
+        response = requests.get('https://www.acmicpc.net/user/'+data["bj_username"])
+        if response.status_code != 200:
+            return self.error("Baekjoon username not found")
+        
         if User.objects.filter(username=data["username"]).exists():
             return self.error("Username already exists")
         if User.objects.filter(email=data["email"]).exists():
