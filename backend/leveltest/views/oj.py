@@ -19,9 +19,7 @@ class LevelTestProblemAPI(APIView):
             except LevelTestProblem.DoesNotExist:
                 return self.error("Problem does not exist")
 
-        limit = request.GET.get("limit")
-        if not limit:
-            return self.error("Limit is needed")
+    
 
         problems = LevelTestProblem.objects.all()
 
