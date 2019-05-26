@@ -2,6 +2,7 @@
 <div>
   <div class="tab-wrapper">
     <h2>Self Check!</h2>
+    <p class="notice">*진단고사는 Python 3 버전을 기준으로 제작되었습니다.</p>
     <Tabs >
 
       <TabPane label="초급">
@@ -12,6 +13,7 @@
           <li> <Icon type="ios-checkmark" /> 연산</li>
           <li> <Icon type="ios-checkmark" /> 흐름제어</li>
           <li> <Icon type="ios-checkmark" /> 함수 개념 이해</li>
+          <li> <Icon type="ios-checkmark" /> 문자열 포매팅</li>
         </ul>
         <router-link to="testlevel" style="display:block;text-align:right;">
           <Button :size="buttonSize" type="primary">
@@ -74,8 +76,10 @@ export default {
   text-align: center;
 }
 
-.tab-wrapper h2{
-  text-align: center;
+.tab-wrapper .notice{
+  text-align: right;
+  font-size: 13px;
+  margin-top: 10px;
 }
 
 .tab-wrapper ul{
