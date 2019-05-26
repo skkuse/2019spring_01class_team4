@@ -9,6 +9,8 @@ urlpatterns = [
     url(r"^api/admin/", include("conf.urls.admin")),
     url(r"^api/", include("problem.urls.oj")),
     url(r"^api/admin/", include("problem.urls.admin")),
+    url(r"^api/", include("leveltest.urls.oj")),
+    url(r"^api/admin/", include("leveltest.urls.admin")),
     url(r"^api/", include("contest.urls.oj")),
     url(r"^api/admin/", include("contest.urls.admin")),
     url(r"^api/", include("submission.urls.oj")),
