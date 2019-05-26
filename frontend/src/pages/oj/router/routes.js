@@ -64,12 +64,12 @@ export default [
         component: () => import('@oj/views/leveltest/CheckLevel')
       },
       {
-        path: '/test',
-        name: 'testlevel',
+        path: 'test',
+        name: 'test-level',
         component: () => import('@oj/views/leveltest/TestLevel')
       },
       {
-        path: '/result',
+        path: 'result',
         name: 'testresult',
         component: () => import('@oj/views/leveltest/TestResult')
       }

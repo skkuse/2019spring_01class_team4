@@ -15,7 +15,7 @@
           <li> <Icon type="ios-checkmark" /> 함수 개념 이해</li>
           <li> <Icon type="ios-checkmark" /> 문자열 포매팅</li>
         </ul>
-        <router-link to="testlevel" style="display:block;text-align:right;">
+        <router-link to="/leveltest/test" style="display:block;text-align:right;">
           <Button :size="buttonSize" type="primary">
             문제 풀기
             <Icon type="ios-arrow-forward" />
