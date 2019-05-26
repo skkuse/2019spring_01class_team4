@@ -8,6 +8,12 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 axios.defaults.xsrfCookieName = 'csrftoken'
 
 export default {
+  // 진단고사 문제 가져오기  imit 10 , difficulty
+  getLevelTest (params) {
+    return ajax('leveltest', 'get', {
+      params
+    })
+  },
   getWebsiteConf (params) {
     return ajax('website', 'get', {
       params

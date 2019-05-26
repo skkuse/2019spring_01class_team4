@@ -1,6 +1,5 @@
 <template lang='html'>
 <div class="test-wrapper">
-    
     <Carousel v-model="value">
         <!-- 문제 -->
         <CarouselItem>
@@ -112,11 +111,17 @@ getDiv(2,6)와 CommonDiv(div_x, div_y)를 차례대로 호출했을 때, 결과�
 </div>
 </template>
 <script>
+import api from '@oj/api'
+
 export default {
   data () {
     return {
-      value: 0
+      value: 0,
+      problems: []
     }
+  },
+  mounted () {
+    this.init()
   },
   computed: {
     answers () {
@@ -125,6 +130,14 @@ export default {
         answers.push('')
       }
       return answers
+    }
+  },
+  methods: {
+    init () {
+      api.getLevelTest({difficulty: 'mid', limit: 10})
+      .then(res => {
+        this.problems = res.data.data.results
+      })
     }
   }
 }
