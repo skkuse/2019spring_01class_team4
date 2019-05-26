@@ -20,6 +20,8 @@ class UserRegisterSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=32)
     password = serializers.CharField(min_length=6)
     email = serializers.EmailField(max_length=64)
+    bj_username = serializers.CharField(max_length=32)
+    hr_username = serializers.CharField(max_length=32)
     captcha = serializers.CharField()
 
 

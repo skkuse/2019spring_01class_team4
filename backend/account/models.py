@@ -83,6 +83,14 @@ class UserProfile(models.Model):
     #         }
     #     }
     # }
+
+    # 백준, 해커랭크 아이디 필드 추가
+    hr_username = models.TextField(null=True)
+    bj_username = models.TextField(null=True)
+
+
+
+
     acm_problems_status = JSONField(default=dict)
     # like acm_problems_status, merely add "score" field
     oi_problems_status = JSONField(default=dict)

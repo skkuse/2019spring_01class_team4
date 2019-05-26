@@ -2,10 +2,6 @@
   <div id="header">
     <Menu theme="light" mode="horizontal" @on-select="handleRoute" :active-name="activeMenu" class="oj-menu">
       <div class="logo"><span>Qurious</span></div>
-      <Menu-item name="/">
-        <Icon type="home"></Icon>
-        {{$t('m.Home')}}
-      </Menu-item>
       <Menu-item name="/test">
         <Icon type="ios-paper"></Icon>
         진단고사
@@ -17,6 +13,10 @@
       <Menu-item name="/status">
         <Icon type="ios-pulse-strong"></Icon>
         {{$t('m.NavStatus')}}
+      </Menu-item>
+      <Menu-item name="/leveltest">
+        <Icon type="ios-pulse-strong"></Icon>
+        진단고사 임시
       </Menu-item>
 
       <template v-if="!isAuthenticated">

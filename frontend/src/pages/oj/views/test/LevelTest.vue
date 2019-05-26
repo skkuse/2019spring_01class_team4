@@ -3,6 +3,10 @@
     <Col :span=19>
     <Panel shadow>
       <div slot="title">Level Test!!!</div>
+      <Button @on-click="testCrawler">테스트용</Button>
+      <Input v-model="username" @on-enter="testCrawler" @on-click="testCrawler" 
+            placeholder="username"
+            icon="ios-search-strong"/>
       <div slot="extra">
         <ul class="filter">
           <li>
@@ -73,6 +77,7 @@
 <script>
   import { mapGetters } from 'vuex'
   import api from '@oj/api'
+  import crawler from '@oj/crawler'
   import utils from '@/utils/utils'
   import { ProblemMixin } from '@oj/components/mixins'
   import Pagination from '@oj/components/Pagination'
@@ -158,6 +163,7 @@
         problemList: [],
         limit: 20,
         total: 0,
+        username: '',
         loadings: {
           table: true,
           tag: true
@@ -189,6 +195,13 @@
           this.getTagList()
         }
         this.getProblemList()
+      },
+      testCrawler () {
+        crawler.testCrawlerApi(this.username)
+        .then((res) => {
+          console.log(res.data)
+          console.log('Success!')
+        })
       },
       pushRouter () {
         this.$router.push({
