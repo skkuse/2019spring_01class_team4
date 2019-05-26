@@ -53,6 +53,30 @@ export default [
     component: LevelTest
   },
   {
+    name: 'leveltest',
+    path: '/leveltest',
+    meta: {title: '진단고사'},
+    component: () => import('@oj/views/leveltest'),
+    children: [
+      {
+        path: '',
+        name: 'checklevel',
+        component: () => import('@oj/views/leveltest/CheckLevel')
+      },
+      {
+        path: 'test',
+        name: 'test-level',
+        component: () => import('@oj/views/leveltest/TestLevel')
+      },
+      {
+        path: 'result',
+        name: 'testresult',
+        component: () => import('@oj/views/leveltest/TestResult')
+      }
+
+    ]
+  },
+  {
     name: 'problem-list',
     path: '/problems',
     meta: {title: 'Problem List'},

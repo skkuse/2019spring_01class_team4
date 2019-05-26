@@ -1,6 +1,6 @@
 <template>
   <div class="setting-main">
-    <div class="section-title">{{$t('m.Avatar_Setting')}}</div>
+    <!-- <div class="section-title">{{$t('m.Avatar_Setting')}}</div>
     <template v-if="!avatarOption.imgSrc">
       <Upload type="drag"
               class="mini-container"
@@ -12,10 +12,10 @@
           <p>Drop here, or click to select manually</p>
         </div>
       </Upload>
-    </template>
+    </template> -->
 
-    <template v-else>
-      <div class="flex-container">
+    <!-- <template v-else> -->
+      <!-- <div class="flex-container">
         <div class="cropper-main inline">
           <vueCropper
             ref="cropper"
@@ -49,9 +49,9 @@
             <img :src="avatarOption.imgSrc" :style="preview.img">
           </div>
         </div>
-      </div>
-    </template>
-    <Modal v-model="uploadModalVisible"
+      </div> -->
+    <!-- </template> -->
+    <!-- <Modal v-model="uploadModalVisible"
            title="Upload the avatar">
       <div class="upload-modal">
         <p class="notice">Your avatar will be set to:</p>
@@ -60,7 +60,7 @@
       <div slot="footer">
         <Button @click="uploadAvatar" :loading="loadingUploadBtn">upload</Button>
       </div>
-    </Modal>
+    </Modal> -->
 
     <div class="section-title">{{$t('m.Profile_Setting')}}</div>
     <Form ref="formProfile" :model="formProfile">
