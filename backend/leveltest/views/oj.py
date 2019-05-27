@@ -34,3 +34,22 @@ class LevelTestProblemAPI(APIView):
         return self.success(problem.title)
 
 
+class SubmitLevelTestAPI(APIView):
+
+    def post(self, request):
+        data = request.data
+        correct = []
+        leveltest = LevelTestProblem.objects.filter(difficulty=data['difficulty']).order_by('ordering')
+        for myanswer, problem in zip(data['answers'], leveltest):
+            if int(problem.answer) == int(myanswer):
+                correct.push(True)
+            else:
+                correct.push(False)
+        score = sum(correct)
+        i=0
+        while correct:
+            if correct.pop(0):
+                leveltest[i]
+            i += 1
+        return self.success(score)
+
