@@ -571,7 +571,7 @@
           'create-contest-problem': 'createContestProblem',
           'edit-contest-problem': 'editContestProblem'
         }[this.routeName]
-        // edit contest problem 时, contest_id会被后来的请求覆盖掉
+
         if (funcName === 'editContestProblem') {
           this.problem.contest_id = this.contest.id
         }

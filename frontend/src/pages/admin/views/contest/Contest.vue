@@ -5,74 +5,44 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item :label="$t('m.ContestTitle')" required>
-              <el-input v-model="contest.title" :placeholder="$t('m.ContestTitle')"></el-input>
+              <el-input v-model="testproblem.title" :placeholder="$t('m.ContestTitle')"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item :label="$t('m.ContestDescription')" required>
-              <Simditor v-model="contest.description"></Simditor>
+              <Simditor v-model="testproblem.description"></Simditor>
+            </el-form-item>
+          </el-col>
+        
+          <el-col :span="8">
+            <el-form-item :label="'선택지 만들기'">
+              <el-input class="choice" v-model="testproblem.choices[1]" :placeholder="'1번 문항'"></el-input>
+              <el-input class="choice" v-model="testproblem.choices[2]" :placeholder="'2번 문항'"></el-input>
+              <el-input class="choice" v-model="testproblem.choices[3]" :placeholder="'3번 문항'"></el-input>
+              <el-input class="choice" v-model="testproblem.choices[4]" :placeholder="'4번 문항'"></el-input>
+              <el-input class="choice" v-model="testproblem.choices[5]" :placeholder="'5번 문항'"></el-input>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="8">
+            <el-form-item :label="'정답'">
+              <el-input-number class="choice" v-model="testproblem.answer" :min="1" :max="5"></el-input-number>  
+            </el-form-item>
+
+            <el-form-item :label="'순번'">
+              <el-input-number v-model="testproblem.ordering" :min="1" :max="30"></el-input-number>  
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item :label="$t('m.Contest_Start_Time')" required>
-              <el-date-picker
-                v-model="contest.start_time"
-                type="datetime"
-                :placeholder="$t('m.Contest_Start_Time')">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item :label="$t('m.Contest_End_Time')" required>
-              <el-date-picker
-                v-model="contest.end_time"
-                type="datetime"
-                :placeholder="$t('m.Contest_End_Time')">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item :label="$t('m.Contest_Password')">
-              <el-input v-model="contest.password" :placeholder="$t('m.Contest_Password')"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item :label="$t('m.Contest_Rule_Type')">
-              <el-radio class="radio" v-model="contest.rule_type" label="ACM" :disabled="disableRuleType">ACM</el-radio>
-              <el-radio class="radio" v-model="contest.rule_type" label="OI" :disabled="disableRuleType">OI</el-radio>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item :label="$t('m.Real_Time_Rank')">
-              <el-switch
-                v-model="contest.real_time_rank"
-                active-color="#13ce66"
-                inactive-color="#ff4949">
-              </el-switch>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item :label="$t('m.Contest_Status')">
-              <el-switch
-                v-model="contest.visible"
-                active-text=""
-                inactive-text="">
-              </el-switch>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item :label="$t('m.Allowed_IP_Ranges')">
-              <div v-for="(range, index) in contest.allowed_ip_ranges" :key="index">
-                <el-row :gutter="20" style="margin-bottom: 15px">
-                  <el-col :span="8">
-                    <el-input v-model="range.value" :placeholder="$t('m.CIDR_Network')"></el-input>
-                  </el-col>
-                  <el-col :span="10">
-                    <el-button plain icon="el-icon-fa-plus" @click="addIPRange"></el-button>
-                    <el-button plain icon="el-icon-fa-trash" @click="removeIPRange(range)"></el-button>
-                  </el-col>
-                </el-row>
-              </div>
+            <el-form-item :label="'난이도'">
+               <el-select v-model="testproblem.difficulty" placeholder="Select">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -95,35 +65,40 @@
       return {
         title: 'Create Contest',
         disableRuleType: false,
-        contest: {
+        testproblem: {
           title: '',
           description: '',
-          start_time: '',
-          end_time: '',
-          rule_type: 'ACM',
-          password: '',
-          real_time_rank: true,
-          visible: true,
-          allowed_ip_ranges: [{
-            value: ''
-          }]
-        }
+          choices: {
+            1: '',
+            2: '',
+            3: '',
+            4: '',
+            5: ''
+          },
+          ordering: 1,
+          difficulty: ''
+        },
+        options: [{
+          value: 'high',
+          label: '고급'
+        }, {
+          value: 'mid',
+          label: '중급'
+        }, {
+          value: 'low',
+          label: '초급'
+        }]
       }
     },
     methods: {
       saveContest () {
-        let funcName = this.$route.name === 'edit-contest' ? 'editContest' : 'createContest'
-        let data = Object.assign({}, this.contest)
-        let ranges = []
-        for (let v of data.allowed_ip_ranges) {
-          if (v.value !== '') {
-            ranges.push(v.value)
-          }
-        }
-        data.allowed_ip_ranges = ranges
-        api[funcName](data).then(res => {
+        console.log('Start Saving!')
+        let data = Object.assign({}, this.testproblem)
+        console.log(data)
+        api.createTestProblem(data).then(res => {
           this.$router.push({name: 'contest-list', query: {refresh: 'true'}})
-        }).catch(() => {
+        }).catch((err) => {
+          console.log(err)
         })
       },
       addIPRange () {
@@ -157,3 +132,8 @@
     }
   }
 </script>
+<style>
+  .choice {
+    margin-bottom: 1em;
+  }
+</style>

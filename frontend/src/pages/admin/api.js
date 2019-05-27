@@ -10,6 +10,11 @@ axios.defaults.xsrfCookieName = 'csrftoken'
 
 export default {
   // 登录
+  createTestProblem (data) {
+    return ajax('admin/leveltest', 'post', {
+      data
+    })
+  },
   login (username, password) {
     return ajax('login', 'post', {
       data: {

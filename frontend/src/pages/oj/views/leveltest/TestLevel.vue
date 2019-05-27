@@ -2,49 +2,30 @@
 <div class="test-wrapper">
     <Carousel v-model="value">
         <!-- 문제 -->
-        <CarouselItem>
+        <CarouselItem v-for="problem in problems" :key='ordering'>
             <div class="problem-wrapper">
                 <Card :bordered="false" :padding="50" style="width:800px;">
-                    <p slot="title" class="title">중급 문제 1 번</p>
-                    <pre>
-다음은 두 수의 공약수 전체를 출력하는 프로그램이다.
-div_x=set()
-div_y=set()
+                    <p slot="title" class="title">중급 문제 {{problem.ordering}} 번</p>
 
-def getDiv(xx,yy):
-    for ii in range(1,xx+1):
-        if(xx%ii==0):
-            div_x.add(ii)
-
-    for jj in range(1,yy+1):
-        if(yy%jj==0):
-            div_y.add(jj)
-            
-    def CommonDiv(divSet1, divSet2):
-        divisor=divSet1 & divSet2
-        return divisor
-    print(CommonDiv(div_x, div_y))
-
-getDiv(2,6)와 CommonDiv(div_x, div_y)를 차례대로 호출했을 때, 결과는?
-
-                    </pre>
+                    <p class="content" v-html=problem.description></p>
                     <hr>
+
                     <div class="radio-wrapper">
                         <RadioGroup v-model="answers[0]" vertical>
                             <Radio label="1">
-                                <span> {1,2,1,2,3,6}, {1,2}</span>
+                                <span> {{ problem.choices[1] }}</span>
                             </Radio>
                             <Radio label="2">
-                                <span>{1,2}, {1,2}</span>
+                                <span> {{ problem.choices[2] }}</span>
                             </Radio>
                             <Radio label="3">
-                                <span>{1,2,1,2,3,6}, NameError</span>
+                                <span> {{ problem.choices[3] }}</span>
                             </Radio>
                             <Radio label="4">
-                                <span>{1,2}, NameError</span>
+                                <span> {{ problem.choices[4] }}</span>
                             </Radio>
                             <Radio label="5">
-                                <span>{1,2,3,6}, NameError</span>
+                                <span> {{ problem.choices[5] }}</span>
                             </Radio>
                         </RadioGroup>
                     </div>
@@ -117,6 +98,7 @@ export default {
   data () {
     return {
       value: 0,
+      answers: [],
       problems: []
     }
   },
@@ -134,7 +116,7 @@ export default {
   },
   methods: {
     init () {
-      api.getLevelTest({difficulty: 'mid', limit: 10})
+      api.getLevelTest({difficulty: 'high', limit: 10})
       .then(res => {
         this.problems = res.data.data.results
       })
@@ -154,6 +136,12 @@ export default {
 .test-wrapper .problem-wrapper .title {
     text-align: center;    
     font-size: 20px;
+}
+p.content {
+    margin-left: 25px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    font-size: 15px
 }
 
 
