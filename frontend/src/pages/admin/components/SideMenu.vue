@@ -21,9 +21,9 @@
 
     </el-submenu>
     <el-submenu index="contest">
-      <template slot="title"><i class="el-icon-fa-trophy"></i>{{$t('m.Contest')}}</template>
-      <el-menu-item index="/contest">{{$t('m.Contest_List')}}</el-menu-item>
-      <el-menu-item index="/contest/create">{{$t('m.Create_Contest')}}</el-menu-item>
+      <template slot="title"><i class="el-icon-fa-trophy"></i>LevelTest</template>
+      <!-- <el-menu-item index="/contest">{{$t('m.Contest_List')}}</el-menu-item> -->
+      <el-menu-item index="/contest/create">Create LevelTest</el-menu-item>
     </el-submenu>
   </el-menu>
 </template>

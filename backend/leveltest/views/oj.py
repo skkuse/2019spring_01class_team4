@@ -5,6 +5,7 @@ from account.decorators import check_contest_permission
 from ..models import LevelTestProblem
 from ..serializers import LevelTestProblemSerializer
 from utils.api import APIView, CSRFExemptAPIView, validate_serializer, APIError
+from account.models import User, UserProfile
 
 class LevelTestProblemAPI(APIView):
 
@@ -51,5 +52,7 @@ class SubmitLevelTestAPI(APIView):
             if correct.pop(0):
                 leveltest[i]
             i += 1
+        # 추후 진단고사 결과 반영한 실력수준 삽입
+        request.user.userprofile.hr_username = 'ddd'
         return self.success(score)
 

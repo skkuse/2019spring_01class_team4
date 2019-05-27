@@ -34,6 +34,13 @@ def _default_io_mode():
     return {"io_mode": ProblemIOMode.standard, "input": "input.txt", "output": "output.txt"}
 
 
+class ProblemEX(models.Model):
+    title = models.TextField()
+    url = models.TextField()
+        
+
+
+
 class Problem(models.Model):
     # display ID
     _id = models.TextField(db_index=True)
