@@ -22,7 +22,7 @@ class LevelTestProblemAPI(APIView):
 
         difficulty = request.GET.get("difficulty")
         if difficulty:
-            problems = problems.filter(difficulty=difficulty)
+            problems = problems.filter(difficulty=difficulty).order_by('ordering')
 
         data = self.paginate_data(request, problems, LevelTestProblemSerializer)
         return self.success(data)

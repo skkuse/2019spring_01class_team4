@@ -35,3 +35,14 @@ TARGET=http://localhost:8000 npm run dev
 이제 init_db.sh를 통해 생성한 어드민 유저로 로그인이 가능하다. 
 열려진 페이지에서 login을 누르고 ID: root, PW: rootroot 를 입력해서 로그인 성공시 모든 것이 순조롭다.
 
+### Import Seed Data
+
+``` bash
+python manage.py loaddata testdata.json
+```
+
+### Export Current Data
+
+``` bash
+python manage.py dumpdata '앱명' -o 'Output파일명'
+```
