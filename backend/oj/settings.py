@@ -59,7 +59,7 @@ INSTALLED_APPS = VENDOR_APPS + LOCAL_APPS
 MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'account.middleware.APITokenAuthMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -190,6 +190,8 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     )
 }
+
+    
 
 REDIS_URL = "redis://%s:%s" % (REDIS_CONF["host"], REDIS_CONF["port"])
 

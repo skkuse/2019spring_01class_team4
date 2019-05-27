@@ -1,0 +1,17 @@
+[ 
+    {"model": "leveltest.leveltestproblem", 
+    "pk": 6, 
+    "fields": {
+        "title": "제발 들어가라2", 
+        "description": "def add_and_sub(x,y):\n\treturn x+y, x-y\n\nadd_and_sub(10,5)를 호출했을 때, 나오는 결과값은 무엇인가?", 
+        "answer": 3, 
+        "choices": {
+            "1": "sadsa", 
+            "2": "dadas", 
+            "3": "sadasda",
+            "4": "dasda", 
+            "5": "dasdad"}, 
+        "ordering": 4, 
+        "difficulty": "mid"}
+    }
+]

@@ -4,12 +4,11 @@ from utils.api import APIView
 from account.decorators import check_contest_permission
 from ..models import LevelTestProblem
 from ..serializers import LevelTestProblemSerializer
-
+from utils.api import APIView, CSRFExemptAPIView, validate_serializer, APIError
 
 class LevelTestProblemAPI(APIView):
 
     def get(self, request):
-        # 问题详情页
         problem_id = request.GET.get("problem_id")
         if problem_id:
             try:
@@ -19,14 +18,19 @@ class LevelTestProblemAPI(APIView):
             except LevelTestProblem.DoesNotExist:
                 return self.error("Problem does not exist")
 
-    
-
         problems = LevelTestProblem.objects.all()
 
         difficulty = request.GET.get("difficulty")
         if difficulty:
             problems = problems.filter(difficulty=difficulty)
-        # 根据profile 为做过的题目添加标记
+
         data = self.paginate_data(request, problems, LevelTestProblemSerializer)
         return self.success(data)
+
+
+    def post(self, request):
+        data = request.data
+        problem = LevelTestProblem.objects.create(**data)
+        return self.success(problem.title)
+
 
