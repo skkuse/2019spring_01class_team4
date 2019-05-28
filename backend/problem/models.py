@@ -37,8 +37,8 @@ def _default_io_mode():
 class ProblemEX(models.Model):
     title = models.TextField()
     url = models.TextField()
-        
-
+    difficulty = models.TextField()
+    
 
 
 class Problem(models.Model):
