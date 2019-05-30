@@ -5,85 +5,26 @@
         <CarouselItem v-for="problem in problems" :key='ordering'>
             <div class="problem-wrapper">
                 <Card :bordered="false" :padding="50" style="width:800px;">
-                    <p slot="title" class="title">중급 문제 {{problem.ordering}} 번</p>
-
-                    <p class="content" v-html=problem.description></p>
+                    <p slot="title" class="title">{{ problem.difficulty | getDifficulty }} {{problem.ordering}} 번</p>
+                    <p class="content" v-html="problem.description"></p>
                     <hr>
 
                     <div class="radio-wrapper">
-                        <RadioGroup v-model="answers[0]" vertical>
-                            <Radio label="1">
-                                <span> {{ problem.choices[1] }}</span>
+                        <RadioGroup v-model="answers[problem.ordering - 1]" vertical >
+                            <Radio :label="index" v-for="(choice, index) in problem.choices" :key="index" v-if="choice !== ''">
+                                <span> {{ choice }}</span>
                             </Radio>
-                            <Radio label="2">
-                                <span> {{ problem.choices[2] }}</span>
-                            </Radio>
-                            <Radio label="3">
-                                <span> {{ problem.choices[3] }}</span>
-                            </Radio>
-                            <Radio label="4">
-                                <span> {{ problem.choices[4] }}</span>
-                            </Radio>
-                            <Radio label="5">
-                                <span> {{ problem.choices[5] }}</span>
-                            </Radio>
+                            
                         </RadioGroup>
                     </div>
-                </Card>
+                <div style="text-align:right">
+                    <Button type="primary" @click="onSubmit" v-if="problem.ordering === problems.length">
+                    제출
+                    <Icon type="ios-arrow-forward" />
+                    </Button>
+                </div>    
                 
-            </div>
-        </CarouselItem>
-        <!-- 문제 end -->
-
-        <!-- 문제 -->
-        <CarouselItem>
-            <div class="problem-wrapper">
-                <Card :bordered="false" :padding="50" style="width:800px;">
-                    <p slot="title" class="title">중급 문제 1 번</p>
-                    <pre>
-다음은 두 수의 공약수 전체를 출력하는 프로그램이다.
-div_x=set()
-div_y=set()
-
-def getDiv(xx,yy):
-    for ii in range(1,xx+1):
-        if(xx%ii==0):
-            div_x.add(ii)
-
-    for jj in range(1,yy+1):
-        if(yy%jj==0):
-            div_y.add(jj)
-            
-    def CommonDiv(divSet1, divSet2):
-        divisor=divSet1 & divSet2
-        return divisor
-    print(CommonDiv(div_x, div_y))
-
-getDiv(2,6)와 CommonDiv(div_x, div_y)를 차례대로 호출했을 때, 결과는?
-
-                    </pre>
-                    <hr>
-                    <div class="radio-wrapper">
-                        <RadioGroup v-model="answers[0]" vertical>
-                            <Radio label="1">
-                                <span> {1,2,1,2,3,6}, {1,2}</span>
-                            </Radio>
-                            <Radio label="2">
-                                <span>{1,2}, {1,2}</span>
-                            </Radio>
-                            <Radio label="3">
-                                <span>{1,2,1,2,3,6}, NameError</span>
-                            </Radio>
-                            <Radio label="4">
-                                <span>{1,2}, NameError</span>
-                            </Radio>
-                            <Radio label="5">
-                                <span>{1,2,3,6}, NameError</span>
-                            </Radio>
-                        </RadioGroup>
-                    </div>
                 </Card>
-                
             </div>
         </CarouselItem>
         <!-- 문제 end -->
@@ -95,41 +36,64 @@ getDiv(2,6)와 CommonDiv(div_x, div_y)를 차례대로 호출했을 때, 결과�
 import api from '@oj/api'
 
 export default {
+  props: ['difficulty'],
   data () {
     return {
       value: 0,
-      answers: [],
       problems: []
     }
-  },
-  mounted () {
-    this.init()
   },
   computed: {
     answers () {
       const answers = []
-      for (let index = 0; index < 5; index++) {
+      for (let index = 0; index < this.problems.length; index++) {
         answers.push('')
       }
       return answers
     }
   },
+  filters: {
+    getDifficulty (difficulty) {
+      if (difficulty === 'low') {
+        return '초급'
+      } else if (difficulty === 'mid') {
+        return '중급'
+      } else {
+        return '고급'
+      }
+    }
+  },
+  created () {
+    api.getLevelTest({difficulty: this.difficulty, limit: 10})
+    .then(res => {
+      this.problems = res.data.data.results
+    })
+  },
   methods: {
-    init () {
-      api.getLevelTest({difficulty: 'high', limit: 10})
-      .then(res => {
-        this.problems = res.data.data.results
-      })
+    onSubmit () {
+      if (this.isComplete()) {
+        this.$router.push('/test/result')
+      } else {
+        // eslint-disable-next-line no-undef
+        alert('문제를 모두 풀어주세요.')
+      }
+    },
+    isComplete () {
+      for (let index = 0; index < this.answers.length; index++) {
+        const answer = this.answers[index]
+        if (answer === '') {
+          this.value = index
+          return false
+        }
+      }
+      return true
     }
   }
+
 }
 </script>
 <style >
 .test-wrapper {
-
-}
-
-.test-wrapper .problem-wrapper {
 
 }
 

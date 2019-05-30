@@ -64,9 +64,10 @@ export default [
         component: () => import('@oj/views/leveltest/CheckLevel')
       },
       {
-        path: 'test',
+        path: 'test/:difficulty',
         name: 'test-level',
-        component: () => import('@oj/views/leveltest/TestLevel')
+        component: () => import('@oj/views/leveltest/TestLevel'),
+        props: true
       },
       {
         path: 'result',

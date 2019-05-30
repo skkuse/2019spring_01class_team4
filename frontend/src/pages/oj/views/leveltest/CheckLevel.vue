@@ -15,9 +15,9 @@
           <li> <Icon type="ios-checkmark" /> 함수 개념 이해</li>
           <li> <Icon type="ios-checkmark" /> 문자열 포매팅</li>
         </ul>
-        <router-link to="/leveltest/test" style="display:block;text-align:right;">
-          <Button :size="buttonSize" type="primary">
-            문제 풀기
+        <router-link to="/leveltest/test/low" style="display:block;text-align:right;">
+          <Button type="primary">
+            초급 문제 풀기
             <Icon type="ios-arrow-forward" />
           </Button>
         </router-link>
@@ -33,9 +33,9 @@
           <li> <Icon type="ios-checkmark" /> 탐색 알고리즘</li>
           <li> <Icon type="ios-checkmark" /> 정렬 알고리즘</li>
         </ul>
-        <router-link to="testlevel" style="display:block;text-align:right;">
-          <Button :size="buttonSize" type="primary">
-            문제 풀기
+        <router-link to="/leveltest/test/mid" style="display:block;text-align:right;">
+          <Button type="primary">
+            중급 문제 풀기
             <Icon type="ios-arrow-forward" />
           </Button>
         </router-link>
@@ -52,9 +52,9 @@
           <li> <Icon type="ios-checkmark" /> 정규 표현식</li>
           
         </ul>
-        <router-link to="testlevel" style="display:block;text-align:right;">
-          <Button :size="buttonSize" type="primary">
-            문제 풀기
+        <router-link to="/leveltest/test/high" style="display:block;text-align:right;">
+          <Button type="primary">
+            고급 문제 풀기
             <Icon type="ios-arrow-forward" />
           </Button>
         </router-link>
