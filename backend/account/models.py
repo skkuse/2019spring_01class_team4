@@ -88,9 +88,6 @@ class UserProfile(models.Model):
     hr_username = models.TextField(null=True)
     bj_username = models.TextField(null=True)
 
-
-
-
     acm_problems_status = JSONField(default=dict)
     # like acm_problems_status, merely add "score" field
     oi_problems_status = JSONField(default=dict)

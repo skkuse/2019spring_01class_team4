@@ -34,11 +34,29 @@ def _default_io_mode():
     return {"io_mode": ProblemIOMode.standard, "input": "input.txt", "output": "output.txt"}
 
 
+    
+class QuriousDifficulty(models.Model):
+    name = models.TextField()
+  
+    class Meta:
+        db_table = "qurious_dfficulty"
+
 class ProblemEX(models.Model):
     title = models.TextField()
     url = models.TextField()
-    difficulty = models.TextField()
-    
+    exbank = models.TextField(null=True)
+    pid = models.IntegerField(null=True)
+    difficulty = models.ForeignKey(QuriousDifficulty, related_name='problemex', null=True, on_delete=models.CASCADE)
+    cate1 = models.TextField(null=True)
+    cate2 = models.TextField(null=True)
+    cate3 = models.TextField(null=True)
+
+    class Meta:
+        db_table = "problemex"
+
+
+
+
 
 
 class Problem(models.Model):
