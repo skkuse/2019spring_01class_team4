@@ -53,6 +53,6 @@ class SubmitLevelTestAPI(APIView):
                 leveltest[i]
             i += 1
         # 추후 진단고사 결과 반영한 실력수준 삽입
-        request.user.userprofile.hr_username = 'ddd'
+        # request.user.userprofile.hr_username = 'ddd'
         return self.success(score)
 

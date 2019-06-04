@@ -14,6 +14,11 @@ export default {
       params
     })
   },
+  submitLevelTestAnswers (data) {
+    return ajax('leveltest', 'post', {
+      data
+    })
+  },
   getWebsiteConf (params) {
     return ajax('website', 'get', {
       params

@@ -70,9 +70,10 @@ export default [
         props: true
       },
       {
-        path: 'result',
+        path: 'result/:data',
         name: 'testresult',
-        component: () => import('@oj/views/leveltest/TestResult')
+        component: () => import('@oj/views/leveltest/TestResult'),
+        props: true
       }
 
     ]
