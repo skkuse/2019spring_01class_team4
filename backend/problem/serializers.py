@@ -7,8 +7,16 @@ from utils.api import UsernameSerializer, serializers
 from utils.constants import Difficulty
 from utils.serializers import LanguageNameMultiChoiceField, SPJLanguageNameChoiceField, LanguageNameChoiceField
 
-from .models import Problem, ProblemRuleType, ProblemTag, ProblemIOMode
+from .models import Problem, ProblemRuleType, ProblemTag, ProblemIOMode, ProblemEX
 from .utils import parse_problem_template
+
+
+
+class ProblemEXSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProblemEX
+        fields = "__all__"
+
 
 
 class TestCaseUploadForm(forms.Form):

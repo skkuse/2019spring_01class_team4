@@ -2,9 +2,13 @@ import random
 from django.db.models import Q, Count
 from utils.api import APIView
 from account.decorators import check_contest_permission
-from ..models import ProblemTag, Problem, ProblemRuleType
-from ..serializers import ProblemSerializer, TagSerializer, ProblemSafeSerializer
+from ..models import ProblemTag, Problem, ProblemRuleType, ProblemEX
+from ..serializers import ProblemSerializer, TagSerializer, ProblemSafeSerializer, ProblemEXSerializer
 from contest.models import ContestRuleType
+import requests
+from bs4 import BeautifulSoup as bs
+
+
 
 
 class ProblemTagAPI(APIView):
@@ -20,6 +24,30 @@ class PickOneAPI(APIView):
         if count == 0:
             return self.error("No problem to pick")
         return self.success(problems[random.randint(0, count - 1)]._id)
+
+
+class ProblemEXAPI(APIView):
+    def get(self, request):
+        problem = ProblemEX.objects.get(pk=request.GET.get('id',1))
+        return self.success(ProblemEXSerializer(problem).data)
+
+
+
+class SubmitProblemEXAPI(APIView):
+    def get(self, request):
+        problem = ProblemEX.objects.get(pk=request.GET.get('id',1))
+        if problem.exbank == '백준':
+            # request.user.userprofile.bjusername
+            username = 'josang1204'
+            soup = bs(requests.get('https://www.acmicpc.net/user/'+username).text,'html.parser')
+            plist = [p.text for p in soup.select('div.panel-body')[0].select('span.problem_number')]
+            if str(problem.pid) in plist:
+                return self.success('문제 풀이 완료')
+            else:
+                return self.error('문제를 풀지 않았습니다.')
+        elif problem.exbank == '해커랭크':
+            return self.success('문제 풀이 완료')
+            
 
 
 class ProblemAPI(APIView):
