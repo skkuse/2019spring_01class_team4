@@ -42,7 +42,6 @@ class SubmitLevelTestAPI(APIView):
         data = request.data
         difficulty = data['difficulty']
         correct = 0
-        verygood = 1
         leveltest = LevelTestProblem.objects.filter(difficulty=difficulty).order_by('ordering')
 
         # 맞은 개수 채점
@@ -53,19 +52,13 @@ class SubmitLevelTestAPI(APIView):
         # 난이도 고급의 경우 
         if difficulty == 'high':
             correct += sum([1 for a in data['answers'][3:] if a == 4])
-            verygood = 0
+            end = -1
             
         if correct == 1:
             return self.error('너무 어려우셨군요 ㅠㅠ 낮은 단계 혹은 추후에 다시 응시해주세요.')
-        elif correct <= 3:
-            level = 1 + int_from[difficulty]
-        elif correct <= 6:
-            level = 2 + int_from[difficulty]
-        elif correct <= 9:
-            level = 3 + int_from[difficulty]
-        else:
-            level = 3 + int_from[difficulty] + verygood
-
+        
+        # 난이도 산정식
+        level = ((correct + 2) // 3) + int_from[difficulty] + end
         qlevel = QuriousDifficulty.objects.get(pk=level)
 
         # 유저에게 실력수준 설정
