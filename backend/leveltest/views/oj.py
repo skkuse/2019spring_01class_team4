@@ -43,9 +43,9 @@ class SubmitLevelTestAPI(APIView):
         leveltest = LevelTestProblem.objects.filter(difficulty=data['difficulty']).order_by('ordering')
         for myanswer, problem in zip(data['answers'], leveltest):
             if int(problem.answer) == int(myanswer):
-                correct.push(True)
+                correct.append(True)
             else:
-                correct.push(False)
+                correct.append(False)
         score = sum(correct)
         i=0
         while correct:
@@ -53,6 +53,6 @@ class SubmitLevelTestAPI(APIView):
                 leveltest[i]
             i += 1
         # 추후 진단고사 결과 반영한 실력수준 삽입
-        request.user.userprofile.hr_username = 'ddd'
+        # request.user.userprofile.hr_username = 'ddd'
         return self.success(score)
 
