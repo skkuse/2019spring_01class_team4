@@ -6,6 +6,10 @@ from ..models import LevelTestProblem
 from ..serializers import LevelTestProblemSerializer
 from utils.api import APIView, CSRFExemptAPIView, validate_serializer, APIError
 from account.models import User, UserProfile
+from problem.models import QuriousDifficulty
+
+
+int_from = {'low':0, 'mid':3, 'high':6}
 
 class LevelTestProblemAPI(APIView):
 
@@ -19,11 +23,8 @@ class LevelTestProblemAPI(APIView):
             except LevelTestProblem.DoesNotExist:
                 return self.error("Problem does not exist")
 
-        problems = LevelTestProblem.objects.all()
-
         difficulty = request.GET.get("difficulty")
-        if difficulty:
-            problems = problems.filter(difficulty=difficulty).order_by('ordering')
+        problems = LevelTestProblem.objects.filter(difficulty=difficulty).order_by('ordering')
 
         data = self.paginate_data(request, problems, LevelTestProblemSerializer)
         return self.success(data)
@@ -39,20 +40,44 @@ class SubmitLevelTestAPI(APIView):
 
     def post(self, request):
         data = request.data
-        correct = []
-        leveltest = LevelTestProblem.objects.filter(difficulty=data['difficulty']).order_by('ordering')
+        difficulty = data['difficulty']
+        correct = 0
+        verygood = 1
+        leveltest = LevelTestProblem.objects.filter(difficulty=difficulty).order_by('ordering')
+
+        # 맞은 개수 채점
         for myanswer, problem in zip(data['answers'], leveltest):
-            if int(problem.answer) == int(myanswer):
-                correct.append(True)
-            else:
-                correct.append(False)
-        score = sum(correct)
-        i=0
-        while correct:
-            if correct.pop(0):
-                leveltest[i]
-            i += 1
+            if problem.answer == int(myanswer):
+                correct += 1
+        
+        # 난이도 고급의 경우 
+        if difficulty == 'high':
+            correct += sum([1 for a in data['answers'][3:] if a == 4])
+            verygood = 0
+            
+        if correct == 1:
+            return self.error('너무 어려우셨군요 ㅠㅠ 낮은 단계 혹은 추후에 다시 응시해주세요.')
+        elif correct <= 3:
+            level = 1 + int_from[difficulty]
+        elif correct <= 6:
+            level = 2 + int_from[difficulty]
+        elif correct <= 9:
+            level = 3 + int_from[difficulty]
+        else:
+            level = 3 + int_from[difficulty] + verygood
+
+        qlevel = QuriousDifficulty.objects.get(pk=level)
+
+        # 유저에게 실력수준 설정
+        request.user.userprofile.level = qlevel
+        print(request.user,':',level, request.user.userprofile.level.name)
+
+        # 정답이 1개(10%미만)일 경우, 재시험을 요청한다.
+        # 정답이 2~3개(10%이상 35%미만)일 경우, 중급1단계를 반환한다.
+        # 정답이 4~6개(35%이상 60%미만)일 경우, 중급 2단계를 반환한다.
+        # 정답이 7~9개(60% 이상 85% 미만)일 경우, 중급 3단계를 반환한다.
+        # 정답이 10개~11개(85%)일 경우, 고급 1단계를 반환한다. 
         # 추후 진단고사 결과 반영한 실력수준 삽입
         # request.user.userprofile.hr_username = 'ddd'
-        return self.success(score)
+        return self.success(qlevel.name)
 
