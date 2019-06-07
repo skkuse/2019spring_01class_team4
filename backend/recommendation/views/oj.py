@@ -19,7 +19,7 @@ class ProvideRecommendationsAPI(APIView):
         # u_level = request.user.userprofile.level
         # QuriousDifficulty.problemex
         #problems = ProblemEX.objects.filter(exbank='백준')[:1]
-        problems = ProblemEX.objects.filter(exbank='\\ud574\\ucee4\\ub7ad\\ud06c')[:3]
+        problems = ProblemEX.objects.filter(exbank='해커랭크')[:3]
 
         data = self.paginate_data(request, problems, ProblemEXSerializer)
         return self.success(data)
