@@ -148,4 +148,8 @@ test.vue
 vendor-manifest.json
 vendor.dll*.js
 
+### JupyterNotebook ###
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
 
