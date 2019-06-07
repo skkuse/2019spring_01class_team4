@@ -59,7 +59,7 @@ class ProblemEX(models.Model):
 # Qurious 진단고사 문제 분류 
 # 대분류 / 중분류 / 소분류 field 
 # 데이터 집어넣기
-class ProblemCategory(modesl.Model):
+class ProblemCategory(models.Model):
     pass
 
 

@@ -28,6 +28,15 @@ class PickOneAPI(APIView):
 
 class ProblemEXAPI(APIView):
     def get(self, request):
+        problem_id = request.GET.get("problem_id")
+        if problem_id:
+            try:
+                problem = ProblemEX.objects.get(pk=int(problem_id))
+                problem_data = ProblemEXSerializer(problem).data
+                return self.success(problem_data)
+            except Problem.DoesNotExist:
+                return self.error("Problem does not exist")
+
         problem = ProblemEX.objects.get(pk=request.GET.get('id',1))
         return self.success(ProblemEXSerializer(problem).data)
 
