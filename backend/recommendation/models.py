@@ -12,6 +12,18 @@ from problem.models import ProblemEX, Problem
 class RecommendHistory(models.Model):
     round=models.IntegerField()
     is_Ex=models.BooleanField()
-    created_at=models.DataTimeField(auto_now_add=True)
-    difficulty=models.ForeignKey(Problem.QuriousDifficulty, null=True, on_delete=models.CASCADE)
-    user=models.ForeignKey(User, on_delete=models.CASCADE)
+    is_Solved=models.BooleanField() #풀이여부
+    created_at=models.DataTimeField(auto_now_add=True, null=True)
+
+    difficulty=models.ForeignKey('problem.QuriousDifficulty', null=True, related_name='difficulty', on_delete=models.CASCADE)
+    user=models.ForeignKey(User, related_name= "users", on_delete=models.CASCADE)
+    problem=models.ForeignKey(Problem, related_name= "problems", on_delete=models.CASCADE)
+
+    class Meta:
+        db_table="recommend_history"
+        ordering=("-created_at",)
+'''
+    def add_round(self): #필요?
+        self.round = models.F("round") + 1
+        self.save(update_fields=["round"])
+'''
