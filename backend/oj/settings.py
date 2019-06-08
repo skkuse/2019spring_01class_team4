@@ -52,6 +52,7 @@ LOCAL_APPS = [
     'options',
     'judge',
     'leveltest',
+    'recommendation',
 ]
 
 INSTALLED_APPS = VENDOR_APPS + LOCAL_APPS

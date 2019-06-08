@@ -3,7 +3,6 @@ from django.conf import settings
 from django.db import models
 from utils.models import JSONField
 
-
 class AdminType(object):
     REGULAR_USER = "Regular User"
     ADMIN = "Admin"
@@ -87,6 +86,8 @@ class UserProfile(models.Model):
     # 백준, 해커랭크 아이디 필드 추가
     hr_username = models.TextField(null=True)
     bj_username = models.TextField(null=True)
+    
+    level = models.ForeignKey('problem.QuriousDifficulty', null=True, related_name='users', on_delete=models.CASCADE)
 
     acm_problems_status = JSONField(default=dict)
     # like acm_problems_status, merely add "score" field

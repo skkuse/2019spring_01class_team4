@@ -28,6 +28,15 @@ class PickOneAPI(APIView):
 
 class ProblemEXAPI(APIView):
     def get(self, request):
+        problem_id = request.GET.get("problem_id")
+        if problem_id:
+            try:
+                problem = ProblemEX.objects.get(pk=int(problem_id))
+                problem_data = ProblemEXSerializer(problem).data
+                return self.success(problem_data)
+            except Problem.DoesNotExist:
+                return self.error("Problem does not exist")
+
         problem = ProblemEX.objects.get(pk=request.GET.get('id',1))
         return self.success(ProblemEXSerializer(problem).data)
 
@@ -46,6 +55,13 @@ class SubmitProblemEXAPI(APIView):
             else:
                 return self.error('문제를 풀지 않았습니다.')
         elif problem.exbank == '해커랭크':
+            # request.user.userprofile.hrusername
+            username = 'play1204dev'
+            response = request.get('https://www.hackerrank.com/rest/hackers/'+username+'/recent_challenges?limit=10&cursor=&response_version=v2').json()
+            # for key in response['models']:
+            #     if problem.url == 'https://www.hackerrank.com'+key['url']:
+            #         return self.success('문제 풀이 완료')
+            # return self.error('문제를 풀지 않았습니다.')
             return self.success('문제 풀이 완료')
             
 
