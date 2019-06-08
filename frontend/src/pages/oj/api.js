@@ -8,6 +8,23 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 axios.defaults.xsrfCookieName = 'csrftoken'
 
 export default {
+
+  // 추천 가져오기
+  getRecomendProblemList () {
+    return ajax('recommendation', 'get')
+    // return ajax('recommendation', 'get')
+  },
+  // 외부문제 가져오기
+  getExProblem (params) {
+    return ajax('problemex', 'get', {
+      params
+    })
+  },
+  submitExProblem (params) {
+    return ajax('problemex/submit', 'get', {
+      params
+    })
+  },
   // 진단고사 문제 가져오기  imit 10 , difficulty
   getLevelTest (params) {
     return ajax('leveltest', 'get', {
@@ -15,7 +32,7 @@ export default {
     })
   },
   submitLevelTestAnswers (data) {
-    return ajax('leveltest', 'post', {
+    return ajax('leveltest/submit', 'post', {
       data
     })
   },

@@ -86,10 +86,16 @@ export default [
   },
   {
     name: 'problem-details',
-    path: '/problem/:problemID',
+    path: '/problem/:problemID/:isEx',
     meta: {title: 'Problem Details'},
     component: Problem
   },
+  // {
+  //   name: 'problem-details-ex',
+  //   path: '/problem/ex/:problemID',
+  //   meta: {title: 'Problem Details'},
+  //   component: () => import('@oj/views/problem/ProblemEx')
+  // },
   {
     name: 'submission-list',
     path: '/status',

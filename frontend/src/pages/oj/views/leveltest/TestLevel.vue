@@ -1,20 +1,24 @@
 <template lang='html'>
 <div class="test-wrapper">
-    <Card class="result" :bordered="false" :padding="50" style="width:800px;" v-if="isSubmit">
+    <Card class="result-wrapper" style="width:500px; padding: 20px 50px; margin:auto;" v-if="isSubmit">
       <p slot="title" class="title">진단 결과</p>
-      <p class="content">
-        중급입니다.
+      <hr>
+      <p class="result">
+        {{result.data}}
       </p>
-      <Button type="primary" @click="this.$router.push('problems')" v-if="problem.ordering === problems.length">
+      <div style="text-align:right;">
+      <Button type="primary" @click="this.$router.push('problems')">
         추천 문제 풀러 가기
         <Icon type="ios-arrow-forward" />
       </Button>
+      </div>
     </Card>
-    <Carousel v-model="value">
+
+    <Carousel v-model="value" dots="none" height="800" v-if="!isSubmit">
         <!-- 문제 -->
         <CarouselItem v-for="problem in problems" :key='ordering'>
           <div class="problem-wrapper">
-            <Card :bordered="false" :padding="50" style="width:800px;">
+            <Card :bordered="false"  style="width:800px; padding: 20px 50px;">
               <p slot="title" class="title">{{ problem.difficulty | getDifficulty }} {{problem.ordering}} 번</p>
               <p class="content" v-html="problem.description"></p>
               <hr>
@@ -72,7 +76,7 @@ export default {
     }
   },
   created () {
-    api.getLevelTest({difficulty: this.difficulty, limit: 10})
+    api.getLevelTest({difficulty: this.difficulty})
     .then(res => {
       this.problems = res.data.data.results
     })
@@ -86,7 +90,8 @@ export default {
         }
         api.submitLevelTestAnswers(body).then(res => {
           this.isSubmit = true
-          this.result = res
+          this.result = res.data
+          console.log(res)
         })
       } else {
         // eslint-disable-next-line no-undef
@@ -108,5 +113,29 @@ export default {
 }
 </script>
 <style >
+.ivu-carousel-arrow {
+  top: 30%;
+}
+.ivu-carousel-arrow.right {
+  right: 3px;
+}
+.ivu-carousel-arrow.left {
+  left: 3px;
+}
 
+.result-wrapper {
+  margin-bottom: 30px;
+}
+
+.result-wrapper .title {
+  
+}
+
+.result-wrapper .result {
+  font-size: 30px;
+  text-align: center;
+  font-weight: 500;
+  margin-bottom: 30px;
+  height: 300px;
+}
 </style>
