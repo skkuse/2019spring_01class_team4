@@ -3,11 +3,13 @@
     <Card class="result-wrapper" style="width:500px; padding: 20px 50px; margin:auto;" v-if="isSubmit">
       <p slot="title" class="title">진단 결과</p>
       <hr>
-      <p class="result">
+      <div class="result">
+        <img :src="resultImg" alt="" style="margin-top: 15px;">
+        <br>
         {{result.data}}
-      </p>
+      </div>
       <div style="text-align:right;">
-      <Button type="primary" @click="this.$router.push('problems')">
+      <Button type="primary" @click.native="$router.push('/problems')">
         추천 문제 풀러 가기
         <Icon type="ios-arrow-forward" />
       </Button>
@@ -73,6 +75,19 @@ export default {
         answers.push('')
       }
       return answers
+    },
+    resultImg () {
+      switch (this.result.data.substr(0, 1)) {
+        case '초':
+          return require('@/assets/level1.png')
+        case '중':
+          return require('@/assets/level2.png')
+        case '고':
+          return require('@/assets/level3.png')
+
+        default:
+          break
+      }
     }
   },
   created () {
@@ -109,7 +124,6 @@ export default {
       return true
     }
   }
-
 }
 </script>
 <style >
@@ -127,8 +141,8 @@ export default {
   margin-bottom: 30px;
 }
 
-.result-wrapper .title {
-  
+.result-wrapper .radio-wrapper {
+  margin-top: 15px;
 }
 
 .result-wrapper .result {
