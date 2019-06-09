@@ -113,7 +113,7 @@ class ProblemAPI(APIView):
         if keyword:
             problems = problems.filter(Q(title__icontains=keyword) | Q(_id__icontains=keyword))
 
-        # 难度筛选
+
         difficulty = request.GET.get("difficulty")
         if difficulty:
             problems = problems.filter(difficulty=difficulty)

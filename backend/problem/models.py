@@ -34,7 +34,6 @@ def _default_io_mode():
     return {"io_mode": ProblemIOMode.standard, "input": "input.txt", "output": "output.txt"}
 
 
-    
 class QuriousDifficulty(models.Model):
     name = models.TextField()
   
@@ -46,6 +45,7 @@ class ProblemEX(models.Model):
     url = models.TextField()
     exbank = models.TextField(null=True)
     pid = models.IntegerField(null=True)
+    correct_ratio = models.FloatField(null=True)
     difficulty = models.ForeignKey(QuriousDifficulty, related_name='problemex', null=True, on_delete=models.CASCADE)
     cate1 = models.TextField(null=True)
     cate2 = models.TextField(null=True)
@@ -60,16 +60,16 @@ class ProblemEX(models.Model):
 # 대분류 / 중분류 / 소분류 field 
 # 데이터 집어넣기
 class ProblemCategory(models.Model):
-    pass
-
-
-
-
+    difficulty = models.ForeignKey(QuriousDifficulty, related_name='category', null=True, on_delete=models.CASCADE)
+    cate1 = models.TextField()
+    cate2 = models.TextField()
+    cate3 = models.TextField()
 
 
 class Problem(models.Model):
     # display ID
     _id = models.TextField(db_index=True)
+    difficulty = models.ForeignKey(QuriousDifficulty, related_name='category', null=True, on_delete=models.CASCADE)
     contest = models.ForeignKey(Contest, null=True, on_delete=models.CASCADE)
     # for contest problem
     is_public = models.BooleanField(default=False)

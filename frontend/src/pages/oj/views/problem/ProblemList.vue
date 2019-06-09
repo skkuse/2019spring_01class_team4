@@ -234,10 +234,10 @@
           results.forEach(resData => {
             let data = {
               id: resData.id,
-              source: resData.exbank,
-              title: resData.title,
-              difficulty: resData.difficulty,
-              pid: resData.pid
+              source: resData.problemex.exbank,
+              title: resData.problemex.title,
+              difficulty: resData.problemex.difficulty,
+              pid: resData.problemex.pid
             }
             this.problemList.push(data)
           })

@@ -1,7 +1,8 @@
 from django.contrib.auth.models import AbstractBaseUser
 from django.conf import settings
 from django.db import models
-from utils.models import JSONField
+from utils.models import JSONField, ArrayField
+
 
 class AdminType(object):
     REGULAR_USER = "Regular User"
@@ -88,6 +89,9 @@ class UserProfile(models.Model):
     bj_username = models.TextField(null=True)
     
     level = models.ForeignKey('problem.QuriousDifficulty', null=True, related_name='users', on_delete=models.CASCADE)
+    current_reco = ArrayField(models.IntegerField(), default=list)
+    recommend_round = models.IntegerField(default=0)
+    # current_recommend = JSONField(default={'data'}, null=True)
 
     acm_problems_status = JSONField(default=dict)
     # like acm_problems_status, merely add "score" field
