@@ -45,8 +45,9 @@ class ProblemEXAPI(APIView):
 class SubmitProblemEXAPI(APIView):
     def get(self, request):
         problem = ProblemEX.objects.get(pk=request.GET.get('id',1))
+        # 테스트후에 이걸로
+        # username = request.GET.get('username') 
         if problem.exbank == '백준':
-            # request.user.userprofile.bjusername
             username = 'josang1204'
             soup = bs(requests.get('https://www.acmicpc.net/user/'+username).text,'html.parser')
             plist = [p.text for p in soup.select('div.panel-body')[0].select('span.problem_number')]
@@ -55,9 +56,8 @@ class SubmitProblemEXAPI(APIView):
             else:
                 return self.error('문제를 풀지 않았습니다.')
         elif problem.exbank == '해커랭크':
-            # request.user.userprofile.hrusername
             username = 'play1204dev'
-            response = request.get('https://www.hackerrank.com/rest/hackers/'+username+'/recent_challenges?limit=10&cursor=&response_version=v2').json()
+            response = requests.get('https://www.hackerrank.com/rest/hackers/'+username+'/recent_challenges?limit=10&cursor=&response_version=v2').json()
             # for key in response['models']:
             #     if problem.url == 'https://www.hackerrank.com'+key['url']:
             #         return self.success('문제 풀이 완료')

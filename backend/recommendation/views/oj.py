@@ -10,9 +10,20 @@ from account.models import User, UserProfile
 from problem.serializers import ProblemEXSerializer
 from problem.models import ProblemEX, QuriousDifficulty
 from ..models import RecommendHistory
-
+from recommendation.serializers import RecommendHistorySerializer
 
 class ProvideRecommendationsAPI(APIView):
+
+    def get(self, request):
+        u = User.objects.get(pk=1).userprofile
+        problems = RecommendHistory.objects.filter(pk__in=u.current_reco)
+        #data = self.paginate_data(request, problems, ProblemEXSerializer)
+        data = self.paginate_data(request, problems, RecommendHistorySerializer)
+        return self.success(data)
+
+
+
+class CreateRecommendationsAPI(APIView):
 
     def get(self, request):
         # 사용자의 실력수준 가져오기
@@ -20,8 +31,8 @@ class ProvideRecommendationsAPI(APIView):
         # QuriousDifficulty.problemex
         #problems = ProblemEX.objects.filter(exbank='백준')[:1]
         solved_p = [r for r in request.user.userprofile.current_reco if RecommendHistory.objects.get(pk=r).is_Solved]
-        # if len(solved_p) < 3:
-        #     return self.error("추천해드리기에 푼 문제가 부족합니다. \n {}문제 더 풀어주세요.".format(3-len(solved_p)))
+        if len(solved_p) < 3:
+            return self.error("추천해드리기에 푼 문제가 부족합니다. \n {}문제 더 풀어주세요.".format(3-len(solved_p)))
         
         problems = request.user.userprofile.level.problemex.all()
 

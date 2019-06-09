@@ -42,6 +42,7 @@ class SubmitLevelTestAPI(APIView):
         data = request.data
         difficulty = data['difficulty']
         correct = 0
+        end = 1 # 맞나.. 
         leveltest = LevelTestProblem.objects.filter(difficulty=difficulty).order_by('ordering')
 
         # 맞은 개수 채점

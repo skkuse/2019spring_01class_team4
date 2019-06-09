@@ -1,14 +1,30 @@
 <template>
   <div class="flex-container">
     <div id="problem-main">
+      <Panel :padding="40" shadow v-if="isEx">
+        <div slot="title">{{problemEx.title}}</div>
+        <div id="problem-content" class="markdown-body" >
+        <div style="text-align:justify;">
+          
+          <Button type="primary" @click="openEx(problemEx.url)">
+            문제 풀러 가기
+            <Icon type="ios-arrow-forward" />
+          </Button>
+          <Button type="primary" @click="submitExProblem">
+            제출
+            <Icon type="ios-arrow-forward" />
+          </Button>
+        </div>
+        </div>
+      </Panel>
       <!--problem main-->
-      <Panel :padding="40" shadow>
+      <Panel :padding="40" shadow v-if="!isEx">
         <div slot="title">{{problem.title}}</div>
         <div id="problem-content" class="markdown-body" v-katex>
           <p class="title">{{$t('m.Description')}}</p>
           <p class="content" v-html=problem.description></p>
           <!-- {{$t('m.music')}} -->
-          <p class="title">{{$t('m.Input')}} <span v-if="problem.io_mode.io_mode=='File IO'">({{$t('m.FromFile')}}: {{ problem.io_mode.input }})</span></p>
+          <p class="title" >{{$t('m.Input')}} <span v-if="problem.io_mode.io_mode=='File IO'">({{$t('m.FromFile')}}: {{ problem.io_mode.input }})</span></p>
           <p class="content" v-html=problem.input_description></p>
 
           <p class="title">{{$t('m.Output')}} <span v-if="problem.io_mode.io_mode=='File IO'">({{$t('m.ToFile')}}: {{ problem.io_mode.output }})</span></p>
@@ -49,7 +65,7 @@
         </div>
       </Panel>
       <!--problem main end-->
-      <Card :padding="20" id="submit-code" dis-hover>
+      <Card :padding="20" id="submit-code" dis-hover v-if="!isEx">
         <CodeMirror :value.sync="code"
                     :languages="problem.languages"
                     :language="language"
@@ -250,13 +266,15 @@
           tags: [],
           io_mode: {'io_mode': 'Standard IO'}
         },
+        problemEx: {},
         pie: pie,
         largePie: largePie,
         // echarts 无法获取隐藏dom的大小，需手动指定
         largePieInitOpts: {
           width: '500',
           height: '480'
-        }
+        },
+        isEx: false
       }
     },
     beforeRouteEnter (to, from, next) {
@@ -281,31 +299,47 @@
         this.$Loading.start()
         this.contestID = this.$route.params.contestID
         this.problemID = this.$route.params.problemID
-        let func = this.$route.name === 'problem-details' ? 'getProblem' : 'getContestProblem'
-        api[func](this.problemID, this.contestID).then(res => {
-          this.$Loading.finish()
-          let problem = res.data.data
-          this.changeDomTitle({title: problem.title})
-          api.submissionExists(problem.id).then(res => {
-            this.submissionExists = res.data.data
+        this.isEx = this.$route.params.isEx
+  
+        if (this.isEx) {
+          api.getExProblem({
+            problem_id: this.$route.params.problemID
+          }).then(res => {
+            let resData = res.data.data
+            let problem = {
+              title: resData.title,
+              source: resData.exbank,
+              url: resData.url
+            }
+            this.problemEx = problem
           })
-          problem.languages = problem.languages.sort()
-          this.problem = problem
-          this.changePie(problem)
+        } else {
+          let func = this.$route.name === 'problem-details' ? 'getProblem' : 'getContest'
+          api[func](this.problemID, this.contestID).then(res => {
+            this.$Loading.finish()
+            let problem = res.data.data
+            this.changeDomTitle({title: problem.title})
+            api.submissionExists(problem.id).then(res => {
+              this.submissionExists = res.data.data
+            })
+            problem.languages = problem.languages.sort()
+            this.problem = problem
+            this.changePie(problem)
 
           // 在beforeRouteEnter中修改了, 说明本地有code，无需加载template
-          if (this.code !== '') {
-            return
-          }
+            if (this.code !== '') {
+              return
+            }
           // try to load problem template
-          this.language = this.problem.languages[0]
-          let template = this.problem.template
-          if (template && template[this.language]) {
-            this.code = template[this.language]
-          }
-        }, () => {
-          this.$Loading.error()
-        })
+            this.language = this.problem.languages[0]
+            let template = this.problem.template
+            if (template && template[this.language]) {
+              this.code = template[this.language]
+            }
+          }, () => {
+            this.$Loading.error()
+          })
+        }
       },
       changePie (problemData) {
         // 只显示特定的一些状态
@@ -463,10 +497,28 @@
       },
       onCopyError (e) {
         this.$error('Failed to copy code')
+      },
+      submitExProblem () {
+        // let user = api.getUserInfo()
+        console.log(this.profile)
+        let username = ''
+        if (this.problemEx.source === '백준') {
+          username = this.profile.bj_username
+        } else {
+          username = this.profile.hr_username
+        }
+        api.submitExProblem({id: this.problemID, username: username}).then(res => {
+          // eslint-disable-next-line no-undef
+          alert(res.data.data)
+        })
+      },
+      openEx (url) {
+        window.open(url)
       }
+
     },
     computed: {
-      ...mapGetters(['problemSubmitDisabled', 'contestRuleType', 'OIContestRealTimePermission', 'contestStatus']),
+      ...mapGetters(['problemSubmitDisabled', 'contestRuleType', 'OIContestRealTimePermission', 'contestStatus', 'profile']),
       contest () {
         return this.$store.state.contest.contest
       },

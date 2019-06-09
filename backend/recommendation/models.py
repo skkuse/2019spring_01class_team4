@@ -13,7 +13,6 @@ class RecommendHistory(models.Model):
     round_num=models.IntegerField()
     is_Ex=models.BooleanField(default=False)
     is_Solved=models.BooleanField(default=False) #풀이여부
-
     created_at=models.DateTimeField(auto_now_add=True, null=True)
 
     difficulty=models.ForeignKey('problem.QuriousDifficulty', null=True, related_name='recommendhistory', on_delete=models.CASCADE)

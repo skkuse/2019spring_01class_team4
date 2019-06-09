@@ -89,8 +89,7 @@
         tagList: [],
         problemTableColumns: [
           {
-            title: '#',
-            key: '_id',
+            title: '출처',
             width: 80,
             render: (h, params) => {
               return h('Button', {
@@ -100,13 +99,20 @@
                 },
                 on: {
                   click: () => {
-                    this.$router.push({name: 'problem-details', params: {problemID: params.row._id}})
+                    let isEx = params.row.source !== ''
+                    let pid = params.row.source === '' ? params.row.id : params.row._id
+                    this.$router.push({name: 'problem-details', params: { problemID: pid, isEx: isEx }})
+                    // if (params.row.source === '') {
+                    //   this.$router.push({name: 'problem-details', params: {problemID: params.row._id}})
+                    // } else {
+                    //   this.$router.push({name: 'problem-details-ex', params: {problemID: params.pid}})
+                    // }
                   }
                 },
                 style: {
                   padding: '2px 0'
                 }
-              }, params.row._id)
+              }, params.row.source === '' ? 'Qurious' : params.row.source)
             }
           },
           {
@@ -120,7 +126,14 @@
                 },
                 on: {
                   click: () => {
-                    this.$router.push({name: 'problem-details', params: {problemID: params.row._id}})
+                    let isEx = params.row.source !== ''
+                    let pid = isEx ? params.row.id : params.row._id
+                    this.$router.push({name: 'problem-details', params: {problemID: pid, isEx: isEx}})
+                    // if (params.row.source === '') {
+                    //   this.$router.push({name: 'problem-details', params: {problemID: params.row._id}})
+                    // } else {
+                    //   this.$router.push({name: 'problem-details-ex', params: {problemID: params.pid}})
+                    // }
                   }
                 },
                 style: {
@@ -145,17 +158,17 @@
                 }
               }, params.row.difficulty)
             }
-          },
-          {
-            title: 'Total',
-            key: 'submission_number'
-          },
-          {
-            title: 'AC Rate',
-            render: (h, params) => {
-              return h('span', this.getACRate(params.row.accepted_number, params.row.submission_number))
-            }
           }
+          // {
+          //   title: 'Total',
+          //   key: 'submission_number'
+          // },
+          // {
+          //   title: 'AC Rate',
+          //   render: (h, params) => {
+          //     return h('span', this.getACRate(params.row.accepted_number, params.row.submission_number))
+          //   }
+          // }
         ],
         problemList: [],
         limit: 20,
@@ -204,12 +217,30 @@
         api.getProblemList(offset, this.limit, this.query).then(res => {
           this.loadings.table = false
           this.total = res.data.data.total
-          this.problemList = res.data.data.results
+          let results = res.data.data.results
+          results.forEach(resData => {
+            this.problemList.push(resData)
+          })
           if (this.isAuthenticated) {
             this.addStatusColumn(this.problemTableColumns, res.data.data.results)
           }
         }, res => {
           this.loadings.table = false
+        })
+
+        api.getRecomendProblemList().then(res => {
+          const results = res.data.data.results
+
+          results.forEach(resData => {
+            let data = {
+              id: resData.id,
+              source: resData.problemex.exbank,
+              title: resData.problemex.title,
+              difficulty: resData.problemex.difficulty,
+              pid: resData.problemex.pid
+            }
+            this.problemList.push(data)
+          })
         })
       },
       getTagList () {
