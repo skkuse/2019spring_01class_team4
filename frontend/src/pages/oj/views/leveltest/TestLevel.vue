@@ -127,6 +127,10 @@ export default {
 }
 </script>
 <style >
+.ivu-card {
+  border-radius: 15px;
+}
+
 .ivu-carousel-arrow {
   top: 30%;
 }
@@ -149,7 +153,7 @@ export default {
   font-size: 30px;
   text-align: center;
   font-weight: 500;
-  margin-bottom: 30px;
+  margin-bottom: 50px;
   height: 300px;
 }
 </style>

@@ -31,8 +31,8 @@ class CreateRecommendationsAPI(APIView):
         # QuriousDifficulty.problemex
         #problems = ProblemEX.objects.filter(exbank='백준')[:1]
         solved_p = [r for r in request.user.userprofile.current_reco if RecommendHistory.objects.get(pk=r).is_Solved]
-        if len(solved_p) < 3:
-            return self.error("추천해드리기에 푼 문제가 부족합니다. \n {}문제 더 풀어주세요.".format(3-len(solved_p)))
+        # if len(solved_p) < 3:
+        #     return self.error("추천해드리기에 푼 문제가 부족합니다. \n {}문제 더 풀어주세요.".format(3-len(solved_p)))
         
         problems = request.user.userprofile.level.problemex.all()
 

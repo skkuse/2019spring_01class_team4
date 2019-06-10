@@ -1,7 +1,7 @@
 <template>
   <div id="header">
     <Menu theme="light" mode="horizontal" @on-select="handleRoute" :active-name="activeMenu" class="oj-menu">
-      <div class="logo"><span>Qurious</span></div>
+      <div class="logo"><img src="@/assets/logo.png" alt=""></div>
       <Menu-item name="/test">
         <Icon type="ios-paper"></Icon>
         진단고사
@@ -122,9 +122,12 @@
     .logo {
       margin-left: 2%;
       margin-right: 2%;
-      font-size: 20px;
       float: left;
       line-height: 60px;
+    }
+    .logo img {
+      width:80px;
+      vertical-align: -4px;
     }
 
     .drop-menu {
