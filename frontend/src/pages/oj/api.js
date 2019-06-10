@@ -14,6 +14,9 @@ export default {
     return ajax('recommendation', 'get')
     // return ajax('recommendation', 'get')
   },
+  requestRecommend () {
+    return ajax('recommendation/create', 'get')
+  },
   // 외부문제 가져오기
   getExProblem (params) {
     return ajax('problemex', 'get', {

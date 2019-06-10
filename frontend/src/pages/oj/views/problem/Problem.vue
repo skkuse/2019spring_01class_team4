@@ -17,6 +17,7 @@
         </div>
         </div>
       </Panel>
+
       <!--problem main-->
       <Panel :padding="40" shadow v-if="!isEx">
         <div slot="title">{{problem.title}}</div>
@@ -300,7 +301,7 @@
         this.contestID = this.$route.params.contestID
         this.problemID = this.$route.params.problemID
         this.isEx = this.$route.params.isEx
-  
+
         if (this.isEx) {
           api.getExProblem({
             problem_id: this.$route.params.problemID

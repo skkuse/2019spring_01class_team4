@@ -31,8 +31,9 @@ class CreateRecommendationsAPI(APIView):
         # QuriousDifficulty.problemex
         #problems = ProblemEX.objects.filter(exbank='백준')[:1]
         solved_p = [r for r in request.user.userprofile.current_reco if RecommendHistory.objects.get(pk=r).is_Solved]
-        if len(solved_p) < 3:
-            return self.error("추천해드리기에 푼 문제가 부족합니다. \n {}문제 더 풀어주세요.".format(3-len(solved_p)))
+        
+        # if len(solved_p) < 3:
+        #     return self.error("추천해드리기에 푼 문제가 부족합니다. \n {}문제 더 풀어주세요.".format(3-len(solved_p)))
         
         problems = request.user.userprofile.level.problemex.all()
 
@@ -46,12 +47,12 @@ class CreateRecommendationsAPI(APIView):
         # 추천하지 않았던 문제 리스트
         new_problems = [p for p in problems if p not in phistory]
 
-        if len(new_problems) < 5:
-            request.user.userprofile.level = QuriousDifficulty.objects.get(pk=u_level_id+1)
-            request.user.userprofile.save()
-            self.get(request)
+        # if len(new_problems) < 5:
+        #     request.user.userprofile.level = QuriousDifficulty.objects.get(pk=u_level_id+1)
+        #     request.user.userprofile.save()
+        #     self.get(request)
         
-        for np in new_problems[:5]:
+        for np in new_problems[:2]:
             s = RecommendHistory.objects.create(round_num=u_reco_round+1, is_Ex=True, difficulty=request.user.userprofile.level, user=request.user, problemex=ProblemEX.objects.get(pk=np.id))  
             u_current_reco.append(s.id)
 

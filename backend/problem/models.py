@@ -42,6 +42,7 @@ class QuriousDifficulty(models.Model):
 
 class ProblemEX(models.Model):
     title = models.TextField()
+    description = models.TextField(null=True)
     url = models.TextField()
     exbank = models.TextField(null=True)
     pid = models.IntegerField(null=True)

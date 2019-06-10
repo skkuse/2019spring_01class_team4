@@ -7,6 +7,7 @@ from ..serializers import ProblemSerializer, TagSerializer, ProblemSafeSerialize
 from contest.models import ContestRuleType
 import requests
 from bs4 import BeautifulSoup as bs
+from recommendation.models import RecommendHistory
 
 
 
@@ -58,12 +59,13 @@ class SubmitProblemEXAPI(APIView):
         elif problem.exbank == '해커랭크':
             username = 'play1204dev'
             response = requests.get('https://www.hackerrank.com/rest/hackers/'+username+'/recent_challenges?limit=10&cursor=&response_version=v2').json()
-            # for key in response['models']:
-            #     if problem.url == 'https://www.hackerrank.com'+key['url']:
-            #         return self.success('문제 풀이 완료')
-            # return self.error('문제를 풀지 않았습니다.')
-            return self.success('문제 풀이 완료')
-            
+            for key in response['models']:
+                if problem.url == 'https://www.hackerrank.com'+key['url']:
+                    r = RecommendHistory.objects.filter(user=1,problemex=problem.id)[0]
+                    r.isSolved = True
+                    r.save()
+                    return self.success('문제 풀이 완료')
+            return self.error('문제를 풀지 않았습니다.')
 
 
 class ProblemAPI(APIView):

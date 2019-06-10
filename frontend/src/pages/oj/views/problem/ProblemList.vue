@@ -32,7 +32,7 @@
                    icon="ios-search-strong"/>
           </li>
           <li>
-            <Button type="info" @click="onReset">
+            <Button type="info" @click="requestRecommend">
               <Icon type="refresh"></Icon>
               문제추천받기
             </Button>
@@ -233,7 +233,7 @@
 
           results.forEach(resData => {
             let data = {
-              id: resData.id,
+              id: resData.problemex.id,
               source: resData.problemex.exbank,
               title: resData.problemex.title,
               difficulty: resData.problemex.difficulty,
@@ -241,6 +241,12 @@
             }
             this.problemList.push(data)
           })
+        })
+      },
+      requestRecommend () {
+        api.requestRecommend().then(res => {
+          console.log(res)
+          this.$router.push({name: 'problem-list'})
         })
       },
       getTagList () {
