@@ -1,7 +1,7 @@
 <template lang='html'>
 <div>
   <div class="tab-wrapper">
-    <h2>Self Check!</h2>
+    <h2> <img class="selfcheck-img" src="@/assets/selfcheck.png"> Self Check</h2>
     <p class="notice">*진단고사는 Python 3 버전을 기준으로 제작되었습니다.</p>
     <Tabs >
 
@@ -15,7 +15,7 @@
           <li> <Icon type="ios-checkmark" /> 함수 개념 이해</li>
           <li> <Icon type="ios-checkmark" /> 문자열 포매팅</li>
         </ul>
-        <router-link to="/leveltest/test/low" style="display:block;text-align:right;">
+        <router-link to="/test/low" style="display:block;text-align:right;">
           <Button type="primary">
             초급 문제 풀기
             <Icon type="ios-arrow-forward" />
@@ -33,7 +33,7 @@
           <li> <Icon type="ios-checkmark" /> 탐색 알고리즘</li>
           <li> <Icon type="ios-checkmark" /> 정렬 알고리즘</li>
         </ul>
-        <router-link to="/leveltest/test/mid" style="display:block;text-align:right;">
+        <router-link to="/test/mid" style="display:block;text-align:right;">
           <Button type="primary">
             중급 문제 풀기
             <Icon type="ios-arrow-forward" />
@@ -52,7 +52,7 @@
           <li> <Icon type="ios-checkmark" /> 정규 표현식</li>
           
         </ul>
-        <router-link to="/leveltest/test/high" style="display:block;text-align:right;">
+        <router-link to="/test/high" style="display:block;text-align:right;">
           <Button type="primary">
             고급 문제 풀기
             <Icon type="ios-arrow-forward" />
@@ -86,5 +86,10 @@ export default {
   margin: 20px 0;
   line-height: 2;
   text-align: justify;
+}
+
+.selfcheck-img {
+  width: 30px;
+  vertical-align: middle;
 }
 </style>

@@ -16,16 +16,16 @@
       </div>
     </Card>
 
-    <Carousel v-model="value" dots="none" height="800" v-if="!isSubmit">
+    <Carousel v-model="value" dots="none" v-if="!isSubmit">
         <!-- 문제 -->
-        <CarouselItem v-for="problem in problems" :key='ordering'>
-          <div class="problem-wrapper">
+        <CarouselItem v-for="problem in problems" :key='problem.ordering' >
+          <div class="problem-wrapper" >
             <Card :bordered="false"  style="width:800px; padding: 20px 50px;">
               <p slot="title" class="title">{{ problem.difficulty | getDifficulty }} {{problem.ordering}} 번</p>
               <p class="content" v-html="problem.description"></p>
               <hr>
               <div class="radio-wrapper">
-                <RadioGroup v-model="answers[problem.ordering - 1]" vertical >
+                <RadioGroup v-model="answers[problem.ordering - 1]" vertical @on-change="radioClick">
                   <Radio :label="index" v-for="(choice, index) in problem.choices" :key="index" v-if="choice !== ''">
                     <span> {{ choice }}</span>
                   </Radio>
@@ -122,19 +122,33 @@ export default {
         }
       }
       return true
+    },
+    radioClick () {
+      // 맨 끝에서 넘어가지 않도록
+      if (this.value !== 10) {
+        this.value += 1
+      }
     }
   }
 }
 </script>
 <style >
+.ivu-card {
+  border-radius: 15px;
+}
+
 .ivu-carousel-arrow {
-  top: 30%;
+  top: 5%;
 }
 .ivu-carousel-arrow.right {
-  right: 3px;
+  right: 30px;
 }
 .ivu-carousel-arrow.left {
-  left: 3px;
+  left: 30px;
+}
+
+.ivu-card-body .radio-wrapper {
+  margin-top: 15px;
 }
 
 .result-wrapper {
@@ -149,7 +163,19 @@ export default {
   font-size: 30px;
   text-align: center;
   font-weight: 500;
-  margin-bottom: 30px;
+  margin-bottom: 50px;
   height: 300px;
+}
+
+.ivu-radio-group {
+  width: 100%;
+  
+}
+
+.ivu-radio-group-item{
+  padding: 0 10px;
+}
+.ivu-radio-group-item:hover {
+  background: rgba(0,0,0,0.1)
 }
 </style>

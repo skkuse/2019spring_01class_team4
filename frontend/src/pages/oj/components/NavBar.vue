@@ -1,8 +1,10 @@
 <template>
   <div id="header">
     <Menu theme="light" mode="horizontal" @on-select="handleRoute" :active-name="activeMenu" class="oj-menu">
-      <div class="logo"><span>Qurious</span></div>
-      <Menu-item name="/test">
+      <router-link to="/">
+      <div class="logo"><img src="@/assets/logo.png" alt=""></div>
+      </router-link>
+      <Menu-item name="/">
         <Icon type="ios-paper"></Icon>
         진단고사
       </Menu-item>
@@ -14,11 +16,6 @@
         <Icon type="ios-pulse-strong"></Icon>
         {{$t('m.NavStatus')}}
       </Menu-item>
-      <Menu-item name="/leveltest">
-        <Icon type="ios-pulse-strong"></Icon>
-        진단고사 임시
-      </Menu-item>
-
       <template v-if="!isAuthenticated">
         <div class="btn-menu">
           <Button type="ghost"
@@ -69,6 +66,7 @@
     },
     mounted () {
       this.getProfile()
+      // this.init()
     },
     methods: {
       ...mapActions(['getProfile', 'changeModalStatus']),
@@ -85,6 +83,14 @@
           mode: mode
         })
       }
+      // init () {
+      //   if (!this.isAuthenticated) {
+      //     this.changeModalStatus({
+      //       visible: true,
+      //       mode: 'login'
+      //     })
+      //   }
+      // }
     },
     computed: {
       ...mapGetters(['website', 'modalStatus', 'user', 'isAuthenticated', 'isAdminRole']),
@@ -122,9 +128,12 @@
     .logo {
       margin-left: 2%;
       margin-right: 2%;
-      font-size: 20px;
       float: left;
       line-height: 60px;
+    }
+    .logo img {
+      width:80px;
+      vertical-align: -4px;
     }
 
     .drop-menu {

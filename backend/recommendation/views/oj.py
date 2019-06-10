@@ -15,7 +15,7 @@ from recommendation.serializers import RecommendHistorySerializer
 class ProvideRecommendationsAPI(APIView):
 
     def get(self, request):
-        u = User.objects.get(pk=1).userprofile
+        u = request.user.userprofile
         problems = RecommendHistory.objects.filter(pk__in=u.current_reco)
         #data = self.paginate_data(request, problems, ProblemEXSerializer)
         data = self.paginate_data(request, problems, RecommendHistorySerializer)
@@ -30,11 +30,15 @@ class CreateRecommendationsAPI(APIView):
         # u_level = request.user.userprofile.level
         # QuriousDifficulty.problemex
         #problems = ProblemEX.objects.filter(exbank='백준')[:1]
+        if request.user.userprofile.level == '':
+            return self.error('진단고사를 풀고 와주세요!')
+
+
         solved_p = [r for r in request.user.userprofile.current_reco if RecommendHistory.objects.get(pk=r).is_Solved]
-        
-        # if len(solved_p) < 3:
-        #     return self.error("추천해드리기에 푼 문제가 부족합니다. \n {}문제 더 풀어주세요.".format(3-len(solved_p)))
-        
+
+        if (len(request.user.recommendhistory.all())!=0) and (len(solved_p) < 3):    
+            return self.error("추천해드리기에 푼 문제가 부족합니다. \n {}문제 더 풀어주세요.".format(3-len(solved_p)))
+            
         problems = request.user.userprofile.level.problemex.all()
 
         u_level_id = request.user.userprofile.level.id 
@@ -46,13 +50,14 @@ class CreateRecommendationsAPI(APIView):
         phistory = [r.problemex for r in rhistory if r.is_Ex]
         # 추천하지 않았던 문제 리스트
         new_problems = [p for p in problems if p not in phistory]
+        random.shuffle(new_problems)
 
-        # if len(new_problems) < 5:
-        #     request.user.userprofile.level = QuriousDifficulty.objects.get(pk=u_level_id+1)
-        #     request.user.userprofile.save()
-        #     self.get(request)
+        if len(new_problems) < 5:
+            request.user.userprofile.level = QuriousDifficulty.objects.get(pk=u_level_id+1)
+            request.user.userprofile.save()
+            self.get(request)
         
-        for np in new_problems[:2]:
+        for np in new_problems[:5]:
             s = RecommendHistory.objects.create(round_num=u_reco_round+1, is_Ex=True, difficulty=request.user.userprofile.level, user=request.user, problemex=ProblemEX.objects.get(pk=np.id))  
             u_current_reco.append(s.id)
 
@@ -64,5 +69,5 @@ class CreateRecommendationsAPI(APIView):
         request.user.userprofile.save()
 
         #data = self.paginate_data(request, u_current_reco, ProblemEXSerializer)
-        return self.success(u_current_reco)
+        return self.success("추천이 완료되었습니다!")
 

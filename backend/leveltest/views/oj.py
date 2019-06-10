@@ -14,6 +14,12 @@ int_from = {'low':0, 'mid':3, 'high':6}
 class LevelTestProblemAPI(APIView):
 
     def get(self, request):
+        if not request.user.is_authenticated:
+            return self.error("로그인 후 다시 응시해주세요.")
+
+        if request.user.userprofile.level:
+            return self.error("이미 응시하신 시험입니다.")
+
         problem_id = request.GET.get("problem_id")
         if problem_id:
             try:
@@ -42,7 +48,7 @@ class SubmitLevelTestAPI(APIView):
         data = request.data
         difficulty = data['difficulty']
         correct = 0
-        end = 1 # 맞나.. 
+        end = 0
         leveltest = LevelTestProblem.objects.filter(difficulty=difficulty).order_by('ordering')
 
         # 맞은 개수 채점
@@ -64,6 +70,7 @@ class SubmitLevelTestAPI(APIView):
 
         # 유저에게 실력수준 설정
         request.user.userprofile.level = qlevel
+        request.user.userprofile.save()
         print(request.user,':',level, request.user.userprofile.level.name)
 
         # 정답이 1개(10%미만)일 경우, 재시험을 요청한다.

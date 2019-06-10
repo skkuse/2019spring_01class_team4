@@ -9,6 +9,9 @@ axios.defaults.xsrfCookieName = 'csrftoken'
 
 export default {
 
+  reqRecomendProblemList () {
+    return ajax('recommendation/create', 'get')
+  },
   // 추천 가져오기
   getRecomendProblemList () {
     return ajax('recommendation', 'get')

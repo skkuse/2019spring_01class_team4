@@ -5,7 +5,7 @@ import {
   Announcements,
   ApplyResetPassword,
   FAQ,
-  Home,
+  // Home,
   Logout,
   NotFound,
   OIRank,
@@ -14,20 +14,19 @@ import {
   ResetPassword,
   SubmissionDetails,
   SubmissionList,
-  UserHome,
-  LevelTest
+  UserHome
 } from '../views'
 
 import * as Contest from '@oj/views/contest'
 import * as Setting from '@oj/views/setting'
 
 export default [
-  {
-    name: 'home',
-    path: '/',
-    meta: {title: 'Home'},
-    component: Home
-  },
+  // {
+  //   name: 'home',
+  //   path: '/',
+  //   meta: {title: 'Home'},
+  //   component: Home
+  // },
   {
     name: 'logout',
     path: '/logout',
@@ -50,11 +49,11 @@ export default [
     name: 'level-test',
     path: '/test',
     meta: {title: '진단고사!'},
-    component: LevelTest
+    component: () => import('@oj/views/leveltest')
   },
   {
     name: 'leveltest',
-    path: '/leveltest',
+    path: '/',
     meta: {title: '진단고사'},
     component: () => import('@oj/views/leveltest'),
     children: [

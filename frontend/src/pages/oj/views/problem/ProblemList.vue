@@ -32,7 +32,7 @@
                    icon="ios-search-strong"/>
           </li>
           <li>
-            <Button type="info" @click="requestRecommend">
+            <Button type="info" @click="requestRecoList">
               <Icon type="refresh"></Icon>
               문제추천받기
             </Button>
@@ -43,6 +43,7 @@
              :columns="problemTableColumns"
              :data="problemList"
              :loading="loadings.table"
+             :id='problemList.id'
              disabled-hover></Table>
     </Panel>
     <Pagination :total="total" :page-size="limit" @on-change="pushRouter" :current.sync="query.page"></Pagination>
@@ -99,8 +100,8 @@
                 },
                 on: {
                   click: () => {
-                    let isEx = params.row.source !== ''
-                    let pid = params.row.source === '' ? params.row.id : params.row._id
+                    let isEx = params.row.source === '해커랭크' || params.row.source === '백준'
+                    let pid = params.row.source === '' ? params.row.pid : params.row._id
                     this.$router.push({name: 'problem-details', params: { problemID: pid, isEx: isEx }})
                     // if (params.row.source === '') {
                     //   this.$router.push({name: 'problem-details', params: {problemID: params.row._id}})
@@ -126,8 +127,8 @@
                 },
                 on: {
                   click: () => {
-                    let isEx = params.row.source !== ''
-                    let pid = isEx ? params.row.id : params.row._id
+                    let isEx = params.row.source === '해커랭크' || params.row.source === '백준'
+                    let pid = isEx ? params.row.pid : params.row._id
                     this.$router.push({name: 'problem-details', params: {problemID: pid, isEx: isEx}})
                     // if (params.row.source === '') {
                     //   this.$router.push({name: 'problem-details', params: {problemID: params.row._id}})
@@ -140,7 +141,8 @@
                   padding: '2px 0',
                   overflowX: 'auto',
                   textAlign: 'left',
-                  width: '100%'
+                  width: '100%',
+                  textDecoration: params.row.isSolved ? 'line-through' : 'none'
                 }
               }, params.row.title)
             }
@@ -158,17 +160,23 @@
                 }
               }, params.row.difficulty)
             }
-          }
+          },
           // {
           //   title: 'Total',
           //   key: 'submission_number'
           // },
-          // {
-          //   title: 'AC Rate',
-          //   render: (h, params) => {
-          //     return h('span', this.getACRate(params.row.accepted_number, params.row.submission_number))
-          //   }
-          // }
+          {
+            title: 'AC Rate',
+            render: (h, params) => {
+              let isEx = params.row.source === '해커랭크' || params.row.source === '백준'
+              if (isEx) {
+                return h('span', params.row.acrate)
+              } else {
+                let ac = this.getACRate(params.row.accepted_number, params.row.submission_number)
+                return h('span', ac === '0%' ? '-' : ac)
+              }
+            }
+          }
         ],
         problemList: [],
         limit: 20,
@@ -187,7 +195,9 @@
       }
     },
     mounted () {
-      this.init()
+      this.getProblemList()
+      this.getRecoList()
+      // // this.init()
     },
     methods: {
       init (simulate = false) {
@@ -203,7 +213,8 @@
         if (!simulate) {
           this.getTagList()
         }
-        this.getProblemList()
+        // this.getProblemList()
+        // this.getRecoList()
       },
       pushRouter () {
         this.$router.push({
@@ -227,26 +238,29 @@
         }, res => {
           this.loadings.table = false
         })
-
+      },
+      getRecoList () {
         api.getRecomendProblemList().then(res => {
           const results = res.data.data.results
 
           results.forEach(resData => {
             let data = {
-              id: resData.problemex.id,
+              id: resData.id,
               source: resData.problemex.exbank,
               title: resData.problemex.title,
-              difficulty: resData.problemex.difficulty,
-              pid: resData.problemex.pid
+              difficulty: resData.problemex.cate1 + ' ' + resData.problemex.cate2,
+              pid: resData.problemex.id,
+              acrate: this.getAcRate(resData.problemex.correct_ratio),
+              isSolved: resData.is_Solved
             }
+            console.log(resData.problemex)
             this.problemList.push(data)
           })
         })
       },
       requestRecommend () {
         api.requestRecommend().then(res => {
-          console.log(res)
-          this.$router.push({name: 'problem-list'})
+          this.$router.go()
         })
       },
       getTagList () {
@@ -300,6 +314,14 @@
         api.pickone().then(res => {
           this.$success('Good Luck')
           this.$router.push({name: 'problem-details', params: {problemID: res.data.data}})
+        })
+      },
+      getAcRate (num) {
+        return Math.round(num * 100) + '%'
+      },
+      requestRecoList () {
+        api.reqRecomendProblemList().then(res => {
+          this.$router.go()
         })
       }
     },

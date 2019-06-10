@@ -11,7 +11,6 @@ from recommendation.models import RecommendHistory
 
 
 
-
 class ProblemTagAPI(APIView):
     def get(self, request):
         tags = ProblemTag.objects.annotate(problem_count=Count("problem")).filter(problem_count__gt=0)
@@ -46,22 +45,29 @@ class ProblemEXAPI(APIView):
 class SubmitProblemEXAPI(APIView):
     def get(self, request):
         problem = ProblemEX.objects.get(pk=request.GET.get('id',1))
+        r = request.user.recommendhistory.filter(problemex=problem.id)[0]
+        if r.is_Solved:
+            return self.error("이미 풀이가 완료된 문제입니다.")
         # 테스트후에 이걸로
         # username = request.GET.get('username') 
+        print(r.problemex.title)
         if problem.exbank == '백준':
-            username = 'josang1204'
+            username = request.user.userprofile.bj_username
             soup = bs(requests.get('https://www.acmicpc.net/user/'+username).text,'html.parser')
             plist = [p.text for p in soup.select('div.panel-body')[0].select('span.problem_number')]
             if str(problem.pid) in plist:
+                r.is_Solved = True
+                r.save()
                 return self.success('문제 풀이 완료')
             else:
                 return self.error('문제를 풀지 않았습니다.')
         elif problem.exbank == '해커랭크':
-            username = 'play1204dev'
+            username = request.user.userprofile.hr_username
+            print(username)
             response = requests.get('https://www.hackerrank.com/rest/hackers/'+username+'/recent_challenges?limit=10&cursor=&response_version=v2').json()
+            print(response)
             for key in response['models']:
                 if problem.url == 'https://www.hackerrank.com'+key['url']:
-                    r = RecommendHistory.objects.filter(user=1,problemex=problem.id)[0]
                     r.isSolved = True
                     r.save()
                     return self.success('문제 풀이 완료')
