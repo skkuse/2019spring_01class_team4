@@ -32,7 +32,7 @@
                    icon="ios-search-strong"/>
           </li>
           <li>
-            <Button type="info" @click="onReset">
+            <Button type="info" @click="requestRecoList">
               <Icon type="refresh"></Icon>
               문제추천받기
             </Button>
@@ -99,7 +99,7 @@
                 },
                 on: {
                   click: () => {
-                    let isEx = params.row.source !== ''
+                    let isEx = params.row.source === '해커랭크' || params.row.source === '백준'
                     let pid = params.row.source === '' ? params.row.id : params.row._id
                     this.$router.push({name: 'problem-details', params: { problemID: pid, isEx: isEx }})
                     // if (params.row.source === '') {
@@ -126,7 +126,7 @@
                 },
                 on: {
                   click: () => {
-                    let isEx = params.row.source !== ''
+                    let isEx = params.row.source === '해커랭크' || params.row.source === '백준'
                     let pid = isEx ? params.row.id : params.row._id
                     this.$router.push({name: 'problem-details', params: {problemID: pid, isEx: isEx}})
                     // if (params.row.source === '') {
@@ -140,7 +140,8 @@
                   padding: '2px 0',
                   overflowX: 'auto',
                   textAlign: 'left',
-                  width: '100%'
+                  width: '100%',
+                  textDecoration: params.row.isSolved ? 'line-through' : 'none'
                 }
               }, params.row.title)
             }
@@ -158,17 +159,23 @@
                 }
               }, params.row.difficulty)
             }
-          }
+          },
           // {
           //   title: 'Total',
           //   key: 'submission_number'
           // },
-          // {
-          //   title: 'AC Rate',
-          //   render: (h, params) => {
-          //     return h('span', this.getACRate(params.row.accepted_number, params.row.submission_number))
-          //   }
-          // }
+          {
+            title: 'AC Rate',
+            render: (h, params) => {
+              let isEx = params.row.source === '해커랭크' || params.row.source === '백준'
+              if (isEx) {
+                return h('span', params.row.acrate)
+              } else {
+                let ac = this.getACRate(params.row.accepted_number, params.row.submission_number)
+                return h('span', ac === '0%' ? '-' : ac)
+              }
+            }
+          }
         ],
         problemList: [],
         limit: 20,
@@ -228,20 +235,7 @@
           this.loadings.table = false
         })
 
-        api.getRecomendProblemList().then(res => {
-          const results = res.data.data.results
-
-          results.forEach(resData => {
-            let data = {
-              id: resData.id,
-              source: resData.problemex.exbank,
-              title: resData.problemex.title,
-              difficulty: resData.problemex.difficulty,
-              pid: resData.problemex.pid
-            }
-            this.problemList.push(data)
-          })
-        })
+        this.getRecoList()
       },
       getTagList () {
         api.getProblemTagList().then(res => {
@@ -294,6 +288,33 @@
         api.pickone().then(res => {
           this.$success('Good Luck')
           this.$router.push({name: 'problem-details', params: {problemID: res.data.data}})
+        })
+      },
+      getAcRate (num) {
+        return Math.round(num * 100) + '%'
+      },
+      getRecoList () {
+        api.getRecomendProblemList().then(res => {
+          const results = res.data.data.results
+
+          results.forEach(resData => {
+            let data = {
+              id: resData.id,
+              source: resData.problemex.exbank,
+              title: resData.problemex.title,
+              difficulty: resData.problemex.cate1 + ' ' + resData.problemex.cate2,
+              pid: resData.problemex.pid,
+              acrate: this.getAcRate(resData.problemex.correct_ratio),
+              isSolved: resData.problemex.is_Solved
+            }
+            console.log(resData.problemex)
+            this.problemList.push(data)
+          })
+        })
+      },
+      requestRecoList () {
+        api.reqRecomendProblemList().then(res => {
+          console.log(res)
         })
       }
     },

@@ -1,8 +1,10 @@
 <template>
   <div id="header">
     <Menu theme="light" mode="horizontal" @on-select="handleRoute" :active-name="activeMenu" class="oj-menu">
+      <router-link to="/">
       <div class="logo"><img src="@/assets/logo.png" alt=""></div>
-      <Menu-item name="/test">
+      </router-link>
+      <Menu-item name="/leveltest">
         <Icon type="ios-paper"></Icon>
         진단고사
       </Menu-item>
@@ -14,11 +16,6 @@
         <Icon type="ios-pulse-strong"></Icon>
         {{$t('m.NavStatus')}}
       </Menu-item>
-      <Menu-item name="/leveltest">
-        <Icon type="ios-pulse-strong"></Icon>
-        진단고사 임시
-      </Menu-item>
-
       <template v-if="!isAuthenticated">
         <div class="btn-menu">
           <Button type="ghost"
@@ -68,7 +65,7 @@
       register
     },
     mounted () {
-      this.getProfile()
+      this.init()
     },
     methods: {
       ...mapActions(['getProfile', 'changeModalStatus']),
@@ -84,7 +81,17 @@
           visible: true,
           mode: mode
         })
+      },
+      init () {
+        this.getProfile()
+        if (!this.isAuthenticated) {
+          this.changeModalStatus({
+            visible: true,
+            mode: 'login'
+          })
+        }
       }
+  
     },
     computed: {
       ...mapGetters(['website', 'modalStatus', 'user', 'isAuthenticated', 'isAdminRole']),

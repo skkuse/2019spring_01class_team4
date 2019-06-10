@@ -5,7 +5,7 @@ import {
   Announcements,
   ApplyResetPassword,
   FAQ,
-  Home,
+  // Home,
   Logout,
   NotFound,
   OIRank,
@@ -22,12 +22,12 @@ import * as Contest from '@oj/views/contest'
 import * as Setting from '@oj/views/setting'
 
 export default [
-  {
-    name: 'home',
-    path: '/',
-    meta: {title: 'Home'},
-    component: Home
-  },
+  // {
+  //   name: 'home',
+  //   path: '/',
+  //   meta: {title: 'Home'},
+  //   component: Home
+  // },
   {
     name: 'logout',
     path: '/logout',
@@ -54,7 +54,7 @@ export default [
   },
   {
     name: 'leveltest',
-    path: '/leveltest',
+    path: '/',
     meta: {title: '진단고사'},
     component: () => import('@oj/views/leveltest'),
     children: [

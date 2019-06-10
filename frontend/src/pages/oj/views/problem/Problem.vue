@@ -2,9 +2,14 @@
   <div class="flex-container">
     <div id="problem-main">
       <Panel :padding="40" shadow v-if="isEx">
-        <div slot="title">{{problemEx.title}}</div>
+        <div slot="title" style="text-align: center;">{{problemEx.title}}</div>
         <div id="problem-content" class="markdown-body" >
-        <div style="text-align:justify;">
+          <div class="problem-info" style="text-align:center">
+            <p style="text-align:right">출처: {{ problemEx.source}}</p>
+            <p style="text-align:right; font-weight:600;">{{problemEx.info}}</p>
+            <img src="@/assets/ex_img.jpg" width="70%" alt="">
+          </div>
+        <div style="text-align:right; margin-top:15px;">
           
           <Button type="primary" @click="openEx(problemEx.url)">
             문제 풀러 가기
@@ -309,7 +314,9 @@
             let problem = {
               title: resData.title,
               source: resData.exbank,
-              url: resData.url
+              url: resData.url,
+              info: resData.cate1 + ' ' + resData.cate2 + ' ' + resData.cate3,
+              acrate: resData.correct_ratio
             }
             this.problemEx = problem
           })

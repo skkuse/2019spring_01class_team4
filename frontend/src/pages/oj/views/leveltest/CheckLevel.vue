@@ -1,7 +1,7 @@
 <template lang='html'>
 <div>
   <div class="tab-wrapper">
-    <h2>Self Check!</h2>
+    <h2> <img class="selfcheck-img" src="@/assets/selfcheck.png"> Self Check</h2>
     <p class="notice">*진단고사는 Python 3 버전을 기준으로 제작되었습니다.</p>
     <Tabs >
 
@@ -86,5 +86,10 @@ export default {
   margin: 20px 0;
   line-height: 2;
   text-align: justify;
+}
+
+.selfcheck-img {
+  width: 30px;
+  vertical-align: middle;
 }
 </style>
