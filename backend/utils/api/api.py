@@ -118,9 +118,9 @@ class APIView(View):
         :return:
         """
         try:
-            limit = int(request.GET.get("limit", "10"))
+            limit = int(request.GET.get("limit", "20"))
         except ValueError:
-            limit = 10
+            limit = 20
         if limit < 0 or limit > 250:
             limit = 10
         try:
